@@ -94,7 +94,7 @@ For analogue PMR446 reception in the normal radio screen:
 | UK CB CEPT channels | 26.965–27.405 MHz | Mode and channel plan matter; use compliant CB radio for TX |
 | UK CB extension | 27.60125–27.99125 MHz | Separate UK 40-channel band |
 | 6 m amateur FM calling | 51.510 MHz | FM |
-| 4 m amateur calling | 70.260 MHz | AM/FM calling; 70.450 MHz is commonly used FM calling |
+| 4 m amateur calling | 70.260 MHz | RSGB lists AM calling; 70.450 MHz is a commonly used FM calling/net reference |
 | Civil airband | 118–137 MHz | AM; 8.33 kHz channel spacing |
 | 2 m amateur FM calling | 145.500 MHz | FM |
 | 2 m repeater outputs | 145.600–145.7875 MHz | Typical handheld TX offset −0.600 MHz |
