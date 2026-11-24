@@ -4,7 +4,8 @@ A comprehensive, source-checked operating manual for the Egzumer custom firmware
 
 ## Main manual
 
-**[Read the complete manual](UV-K5_Egzumer_v2.1.27_Complete_UK_Manual.md)**
+**[Read the complete manual](UV-K5_Egzumer_v2.1.27_Complete_UK_Manual.md)**  
+**[Open the printable quick reference](QUICKREF.md)**
 
 The guide covers:
 
