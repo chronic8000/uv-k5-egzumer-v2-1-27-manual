@@ -155,7 +155,7 @@ The default-build F combinations are:
 | **F + 8** | Frequency reverse | Swaps the RX/TX frequency roles, useful for checking repeater input/output relationships |
 | **F + 9** | Recall the configured “1 Call” channel | Works only if the configured channel is valid |
 
-A long press of `F` toggles the keypad lock. A long press of a numeric key can invoke the corresponding F action without first tapping F, as implemented by the main-key handler.
+A long press of `F` toggles the keypad lock. For most numeric keys, a long press invokes the corresponding F action without first tapping `F`. **Key `5` is the important exception:** its long-press action is `ScnRng` in VFO mode or scan-list membership in MR mode; it does not launch Spectrum. The table below shows this distinction.
 
 ### Main keypad: short press, F shortcut and long press
 
@@ -281,12 +281,13 @@ The exact layout depends on the selected display mode and which features were co
 | `CT` / `DCS` / `DCR` | CTCSS, DCS normal or DCS reverse squelch/code status |
 | `+` / `−` | Repeater transmit-offset direction is configured |
 | `R` | Frequency reverse is active |
-| **57** · `VOX` | Voice-operated transmit is enabled |
+| `VOX` | Voice-operated transmit is enabled |
+| `SCR` | Voice scrambler is enabled for the current channel |
 | `DW` / `XB` / `DWR` | Dual Watch / Cross Band / Dual RX Respond mode indicator |
 | `I` / `II` | Current MR channel is assigned to Scan List 1 / Scan List 2 |
 | `ScnRng` | A bounded VFO scan range is active |
 | RSSI / S-meter / dBm | Approximate received signal indication; not calibrated test equipment |
-| **32** · `MicBar` | Transmit audio-level bar, if enabled in the menu/build |
+| `MicBar` | Transmit audio-level bar, if enabled in the menu/build |
 | Battery `%` or `V` | Estimated battery percentage or voltage, according to `BatTxt` |
 
 ---
@@ -386,6 +387,7 @@ The following table describes the keys while the analyser is in its normal **SPE
 | `2` | Increase frequency movement step | Increases how far UP/DOWN shifts the scan range |
 | `8` | Decrease frequency movement step | Decreases how far UP/DOWN shifts the scan range |
 | `3` | Increase top dB limit | Raises the displayed top of the vertical scale by 1 dB per press, up to the firmware limit |
+| `4` | Cycle measurement count | 64 → 128 → 16 → 32 → 64; unavailable while `ScnRng` is active |
 | `9` | Decrease top dB limit | Lowers the displayed top of the vertical scale, while preserving a minimum display range |
 | `UP` | Move the scan range upward | Shifts the swept frequencies higher by the movement step |
 | `DOWN` | Move the scan range downward | Shifts the swept frequencies lower by the movement step |
@@ -458,9 +460,13 @@ A weak signal below the trigger may appear in the trace but never open the speak
 4. Use `EXIT` to backspace.
 5. Press `MENU` to accept the entered frequency.
 
-The analyser validates the frequency against its permitted input range. When accepted, the sweep is relaunched around the new frequency. If no digits have been entered, `EXIT` returns to the previous analyser state.
+The analyser validates the frequency against its permitted input range. **Whether the entered value is the centre or the lower/start edge depends on the selected analyser scan step:**
 
-Example entry: `446*100` represents **446.100 MHz** (the key `*` is the decimal point in this input screen, not the trigger control).
+- With scan steps **below 2.5 kHz** (0.01, 0.1, 0.5 or 1.0 kHz), the analyser is in *centre mode*. The entered value is the centre; the displayed sweep begins half a span below it.
+- With scan steps **2.5 kHz and above**, the entered value is the *lower/start edge*. The displayed sweep begins at that frequency and extends upward. This includes the default 25 kHz analyser step and the 12.5 kHz PMR446 recipe in section 10.3.
+- When `ScnRng` is active, the range endpoints define the sweep and the `5` frequency-input shortcut is disabled.
+
+If no digits have been entered, `EXIT` returns to the previous analyser state. The key `*` is the decimal point in this input screen, not the trigger control.
 
 ## 6.6 PTT enters STILL mode — it does not transmit
 
@@ -491,7 +497,6 @@ Pressing PTT while in SPECTRUM calls `SetState(STILL)` and tunes to the tracked 
 | `MENU` | Select register box | Cycles through LNAs → LNA → PGA → IF → LNAs |
 | `EXIT` | Return to spectrum sweep | If a register box is selected, the first EXIT clears the selection; another EXIT returns to SPECTRUM and restarts the sweep |
 | `PTT` | No action | The code currently contains no STILL-state transmit implementation |
-
 ### What the register boxes mean
 
 These are low-level BK4819 receiver controls, not normal user settings:
@@ -551,12 +556,29 @@ Most menu screens time out after approximately **20 seconds** of inactivity. Bat
 
 `*` has an extra function while editing **RxCTCS** or **RxDCS**: it starts/stops a CTCSS/DCS scan to identify the code used by an incoming FM signal.
 
+### Numeric jump index — default build audited here
+
+Use this index to locate an item quickly. Optional build flags can change the numbering; the menu label on the radio remains the reliable identifier. `FrCali` is omitted because it is not compiled in by default.
+
+| 01–10 | 11–20 | 21–30 | 31–40 | 41–50 | 51–60 | 61–69 (hidden) |
+|---|---|---|---|---|---|---|
+| 01 `Step` | 11 `BusyCL` | 21 `SList2` | 31 `Mic` | 41 `Roger` | 51 `D Hold` | 61 `F Lock` |
+| 02 `TxPwr` | 12 `Compnd` | 22 `ScnRev` | 32 `MicBar` | 42 `STE` | 52 `D Prel` | 62 `Tx 200` |
+| 03 `RxDCS` | 13 `Demodu` | 23 `F1Shrt` | 33 `ChDisp` | 43 `RP STE` | 53 `D Decd` | 63 `Tx 350` |
+| 04 `RxCTCS` | 14 `ScAdd1` | 24 `F1Long` | 34 `POnMsg` | 44 `1 Call` | 54 `D List` | 64 `Tx 500` |
+| 05 `TxDCS` | 15 `ScAdd2` | 25 `F2Shrt` | 35 `BatTxt` | 45 `ANI ID` | 55 `D Live` | 65 `350 En` |
+| 06 `TxCTCS` | 16 `ChSave` | 26 `F2Long` | 36 `BackLt` | 46 `UPCode` | 56 `AM Fix` | 66 `ScraEn` |
+| 07 `TxODir` | 17 `ChDele` | 27 `M Long` | 37 `BLMin` | 47 `DWCode` | 57 `VOX` | 67 `BatCal` |
+| 08 `TxOffs` | 18 `ChName` | 28 `KeyLck` | 38 `BLMax` | 48 `PTT ID` | 58 `BatVol` | 68 `BatTyp` |
+| 09 `W/N` | 19 `SList` | 29 `TxTOut` | 39 `BltTRX` | 49 `D ST` | 59 `RxMode` | 69 `Reset` |
+| 10 `Scramb` | 20 `SList1` | 30 `BatSav` | 40 `Beep` | 50 `D Resp` | 60 `Sql` | |
+
 ## 7.2 Receive and channel settings
 
 | Menu | Options / range | What it means and how to use it |
 |---|---|---|
 | **60** · `Sql` | 0–9 | Squelch threshold. 0 opens the receiver continuously; higher values require a stronger signal. Start low and increase only enough to silence idle noise. |
-| **02** · `TxPwr` | LOW / MID / HIGH | Selects the transmitter output-power level. This is a radio power setting, not a legal authorisation to transmit. |
+| **02** · `TxPwr` | LOW / MID / HIGH | Selects the transmitter output-power level. |
 | **01** · `Step` | 24 step values, 0.01–500 kHz | VFO frequency increment. Choose a step appropriate to the band/channel plan. |
 | **13** · `Demodu` | FM / AM / USB | Selects the receive demodulator for the current VFO/channel. USB is upper sideband; LSB is not available in the default build. |
 | **09** · `W/N` | Wide / Narrow | Channel receive/transmit filter width. Narrow is normally appropriate for 12.5 kHz land-mobile channels such as analogue PMR446 reception. |
@@ -566,7 +588,7 @@ Most menu screens time out after approximately **20 seconds** of inactivity. Bat
 | **05** · `TxDCS` | OFF, DCS normal or reverse | Encodes a DCS code on transmission. Not needed for receive-only use. |
 | **07** · `TxODir` | OFF / + / − | Enables and sets the transmit offset direction. |
 | **08** · `TxOffs` | Numeric MHz offset | Amount of transmit offset. Only configure for a legitimate, authorised repeater/channel use. |
-| **11** · `BusyCL` | OFF / ON | Busy-channel lockout. When enabled, prevents transmission while the radio detects a busy channel. It is not a licence check and does not guarantee that a frequency is clear. |
+| **11** · `BusyCL` | OFF / ON | Busy-channel lockout. When enabled, prevents transmission while the radio detects a busy channel; it does not guarantee that a frequency is clear. |
 | **10** · `Scramb` | OFF; 2600–3500 Hz | Voice-scrambler setting. Both radios need compatible settings. This is not encryption or secure privacy. Global scrambler enable is in the hidden menu. |
 | **12** · `Compnd` | OFF / TX / RX / TX/RX | Audio compander direction. Both ends generally need compatible settings. It changes audio processing, not the RF channel. |
 | **56** · `AM Fix` | OFF / ON | Enables the firmware's dynamic AM front-end gain adjustment. Leave ON for AM listening unless it causes a specific problem. It cannot remove hardware overload limitations. |
@@ -647,7 +669,8 @@ The source contains **50 CTCSS tone choices** and **104 DCS code choices**. DCS 
 
 | Menu | Options / range | What it means |
 |---|---|---|
-| **41** · `Roger` | OFF / ROGER / MDC | End-of-transmission indication. MDC is a signalling option, not a universal compatibility setting. Leave OFF unless the other system expects it. || **42** · `STE` | OFF / ON | Tail-tone elimination. Helps reduce the squelch tail heard when a CTCSS transmission ends. |
+| **41** · `Roger` | OFF / ROGER / MDC | End-of-transmission indication. MDC is a signalling option, not a universal compatibility setting. Leave OFF unless the other system expects it. |
+| **42** · `STE` | OFF / ON | Tail-tone elimination. Helps reduce the squelch tail heard when a CTCSS transmission ends. |
 | **43** · `RP STE` | OFF / 1–10 × 100 ms | Repeater tail-elimination delay, from 100 ms increments up to about 1 second. Primarily relevant to repeater use. |
 
 ## 7.6 DTMF menu items
@@ -676,20 +699,29 @@ DTMF identifiers and call codes are signalling values, not passwords. The EEPROM
 
 ## 8.1 Enter the hidden menu
 
-The firmware hides the transmit-limit and calibration items from the ordinary menu. To open the hidden menu:
+The radio has **two distinct startup layers**. Do not confuse the factory bootloader's flash mode with Egzumer's application-level startup shortcuts.
+
+### A. Factory bootloader flash mode — PTT + Power On
+
+On the standard original-style UV-K5 V1 hardware, the factory bootloader enters flash/download mode when you:
 
 1. Turn the radio off.
-2. Press and hold **PTT + Side1** (the upper side key).
-3. While holding both, turn the radio on.
-4. The radio opens the menu at the hidden section.
+2. Press and hold **PTT**.
+3. While holding PTT, turn the radio on with the volume knob.
+4. Confirm the expected bootloader indication: the display remains blank and the top white flashlight LED lights steadily.
 
-This boot shortcut is implemented in the firmware boot code. If the key combination is not recognised, power down and try again; do not repeatedly press PTT while the radio is powered normally.
+This bootloader runs **before** Egzumer's application firmware. It is part of the radio's factory boot code, so the sequence is not implemented in `helper/boot.c`. A K1-style programming cable and compatible flashing software can then communicate with the bootloader. Hardware revisions differ; check the flasher's instructions for the exact board in your radio rather than assuming that every UV-K5-family revision uses the same key combination.
 
-### Other power-on key combinations
+### B. Egzumer application startup shortcuts — PTT + side key
 
-The checked-in boot handler also tests **PTT + Side2** (the lower side key). That enters **AirCopy** only when `ENABLE_AIRCOPY` is compiled into the firmware. It is not the hidden F Lock menu. The boot handler does **not** assign PTT held by itself to a firmware flash screen. Do not rely on the earlier claim that “PTT + power-on” alone is the K1-cable flash mode or that a solid LED confirms it; that behaviour is not established by this source path. Use the flashing tool's instructions for the exact radio and bootloader instead.
+These are checked later by the firmware's own `helper/boot.c` handler, after control has passed from the factory bootloader:
 
-At normal operating time, `PTT + Side2` may have a different function: a 1750 Hz repeater tone burst is only available when the relevant TX1750 build option is enabled. The default build audited here has that option disabled. Power-on boot handling and an in-session PTT shortcut are separate functions.
+| Power-on hold | Egzumer application action | Build condition |
+|---|---|---|
+| **PTT + Side1** (upper) | Opens the hidden menu / F Lock section | Built into this firmware |
+| **PTT + Side2** (lower) | Enters AirCopy mode | Only when `ENABLE_AIRCOPY=1`; disabled in the default build audited here |
+
+At normal operating time, `PTT + Side2` may have yet another function: a 1750 Hz repeater tone burst is only available when the relevant TX1750 build option is enabled. The default build audited here has that option disabled. These are three separate mechanisms: factory flash bootloader, firmware startup shortcuts and in-session key actions.
 
 ## 8.2 Hidden menu reference
 
@@ -794,7 +826,7 @@ The UV-K5 firmware is an analogue FM receiver for this purpose. It will not deco
 
 ## 10.2 Receive PMR446 on the normal main screen
 
-For listening to your own PMR446 radios, or communications for which you are an intended recipient:
+To receive an analogue PMR446 channel, configure the VFO as follows:
 
 1. Press **F + 3** until the radio is in VFO/frequency mode.
 2. Press **F + 1** until the 400 MHz band group is selected.
@@ -806,7 +838,7 @@ For listening to your own PMR446 radios, or communications for which you are an 
 8. Enter the required frequency. For Channel 1, enter `446006` with the 12.5 kHz Step; the firmware rounds to 446.00625 MHz. Use the channel table above for the other channels.
 9. Listen through the speaker. If a signal is too weak to open squelch, use the Monitor side-key action briefly.
 
-**A note about CTCSS/DCS:** if another PMR446 handset uses a tone code, that does not make the transmission private. With RxCTCS/RxDCS set to OFF, your receiver will not filter the audio based on that code. This is technically useful for checking your own radios, but it does not grant permission to intercept other people's private conversations.
+**CTCSS/DCS note:** a tone code is a squelch aid, not encryption. With `RxCTCS`/`RxDCS` OFF, the receiver does not filter audio by tone or code.
 
 ## 10.3 Find PMR446 activity with F+5
 
@@ -827,19 +859,19 @@ A useful setup is:
 For a channel-by-channel view of the 200 kHz analogue block, use the analyser's **16-point** setting with a **12.5 kHz** scan interval. The firmware measures 16 points: 446.00625, 446.01875, …, 446.19375 MHz. In the plot these measurements are expanded horizontally, so each channel has its own bar group. The computed sweep width is 16 × 12.5 kHz = 200 kHz; the right-hand displayed edge is the upper boundary after Channel 16, not a seventeenth channel centre.
 
 1. Tune the radio near PMR446 and open `F+5`.
-2. Press `5` to open the analyser's frequency-input screen.
-3. Enter `446*00625` (the `*` key is the decimal point) and press `MENU` to accept. This sets the lower edge/start frequency for this scan-step mode.
-4. Press `4` until `16x` is shown.
-5. Press `1` or `7` until the spectrum interval reads `12.50k`.
+2. Press `4` until `16x` is shown.
+3. Press `1` or `7` until the spectrum interval reads `12.50k`.
+4. Press `5` to open the analyser's frequency-input screen.
+5. Enter `446*00625` (the `*` key is the decimal point) and press `MENU` to accept. At 12.5 kHz the analyser is in lower-edge mode, so this sets Bin 0 to Channel 1 (446.00625 MHz).
 6. Set `0` to FM and `6` to the `12.5k` listen bandwidth. Adjust the trigger with `F` and `*`.
 
-This is a live swept measurement, not 16 independent receivers. The radio still measures channels sequentially, so a very short transmission can begin and end between visits to its frequency. A visible peak only indicates RF energy; it does not identify the sender or make a private transmission public.
+**Do not enter `446*10625` for this 16-bin/12.5 kHz setup.** At this scan step, key `5` accepts the lower edge, not the centre; entering Channel 9 would start the sweep at Channel 9 and omit Channels 1–8.
 
-If no PMR446 peaks appear, that does not mean the radio is faulty. PMR446 is low power and often quiet when nobody is transmitting. Spectrum activity only appears while a signal is present and strong enough to be measured.
+This is a live swept measurement, not 16 independent receivers. The radio measures channels sequentially, so a very short transmission can begin and end between visits to its frequency. If no peaks appear, the band may simply be quiet or signals may be too weak to cross the analyser's trigger threshold.
 
 ## 10.4 Why the UV-K5 must not be used as a PMR446 transmitter
 
-The PMR446 exemption is for conforming handheld equipment meeting the technical conditions, including a fixed/integral antenna and a maximum 500 mW ERP. The UV-K5's detachable antenna and configurable transmitter mean it is not converted into compliant PMR446 equipment by selecting 446 MHz, setting Low power or using a firmware TX lock. Do not press PTT on PMR446 with this radio.
+> **PMR446 transmit warning:** Do not use the UV-K5 to transmit on PMR446. Programming 446 MHz, selecting Low power or enabling a firmware TX lock does not make it compliant; see section 1.1 for the equipment conditions.
 
 ---
 
@@ -864,8 +896,8 @@ The FM screen shows the selected FM band, current frequency or memory channel, a
 | `F + 3` | Toggle FM VFO / station-memory mode |
 | `F + *` or long-press `*` | Start automatic FM scan; the search populates the 20-entry FM station bank, so it can replace the saved station list |
 | `MENU` | Save the found station in VFO mode; delete a selected memory station in MR mode, subject to confirmation |
+| `F + 0` or long-press `0` | Leave FM broadcast mode (the same action that enters it from the main screen) |
 | `EXIT` | Stop a scan, cancel a save/delete prompt, or leave FM radio when idle |
-| `0` | Leave FM radio |
 
 The FM receiver has its own station-memory bank (20 entries). It is separate from the 200 two-way radio memory channels.
 
@@ -881,16 +913,16 @@ In normal radio operation, short-press `*` to enter DTMF input mode. Enter the d
 
 ## 12.2 Configure DTMF for a known system
 
-Only set these values when the system operator has supplied the appropriate ID and codes:
+Only configure DTMF for a system whose operator has supplied the correct ID and signalling strings. **`ANI ID`, `UPCode` and `DWCode` are display-only in this firmware's front-panel menu; you cannot edit them on the radio.** If these fields need changing, use a PC programming application or another programming method that explicitly supports these settings for the Egzumer build installed on your radio. Back up the radio before writing configuration data; this manual does not assume that every version of CHIRP exposes these firmware-specific fields.
 
-1. Set `ANI ID` to the radio's assigned DTMF ID.
-2. Set `UPCode` and `DWCode` to the system's start/end strings.
-3. Set `PTT ID` to the required send timing (OFF / UP / DOWN / UP+DOWN / APOLLO QUINDAR).
-4. Set `D ST` according to whether you want to hear the locally generated tones.
-5. Enable `D Decd` for channels where DTMF decode is required.
-6. Set `D Resp` only if the system expects an audible ring/reply response.
-7. Set `D Hold` and `D Prel` to match the system timing.
-8. Enable `D Live` only if you want the live decoded string displayed.
+The remaining front-panel settings can be configured as follows:
+
+1. Set `PTT ID` to the required send timing (OFF / UP / DOWN / UP+DOWN / APOLLO QUINDAR).
+2. Set `D ST` according to whether you want to hear locally generated tones.
+3. Enable `D Decd` for channels where DTMF decode is required.
+4. Set `D Resp` only if the system expects an audible ring/reply response.
+5. Set `D Hold` and `D Prel` to match the system timing.
+6. Enable `D Live` only if you want the live decoded string displayed.
 
 Do not assume DTMF is secure. It is signalling, not encryption.
 
@@ -905,22 +937,24 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 | Approximate frequency range | UK activity you may encounter | UV-K5 capability / caution |
 |---|---|---|
 | 18–30 MHz | HF services and various short-range/radio uses | Firmware can tune this with Wide RX, but the UV-K5 is not a proper HF receiver. Expect poor sensitivity/selectivity; no general HF performance guarantee. |
-| 30–88 MHz | Land-mobile, specialist and other services; amateur 4 m/6 m activity lies in parts of this wider region | Technically tunable. Treat non-public operational traffic as private; amateur hobby reception is a normal use case. |
+| 26.965–27.405 MHz and 27.60125–27.99125 MHz | UK Citizens' Band: 40 CEPT channels and the separate 40-channel UK band | Tunable with Wide RX. The firmware is not a substitute for compliant CB equipment; use the correct channel plan and mode for reception. |
+| 30–88 MHz | Land-mobile, specialist and other services; amateur 4 m/6 m activity lies in parts of this wider region | Technically tunable. The UV-K5 is not a proper HF receiver and does not have a dedicated 4 m/6 m front end. |
 | 50–52 MHz | UK amateur 6-metre activity: 50–51 MHz is primary and 51–52 MHz is secondary under the Ofcom amateur licence terms | FM/AM/USB receiver modes may be useful depending on the signal and band segment. |
-| 70–70.5 MHz | UK amateur 4-metre activity | FM/USB as appropriate; reception only unless appropriately licensed to transmit. |
+| 70–70.5 MHz | UK amateur 4-metre activity | The band includes narrowband and 12.5 kHz channelised segments; common activity includes 70.260 MHz AM/FM calling and 70.450 MHz FM calling. |
 | 87.5–108 MHz | Analogue FM broadcast radio | Best accessed with **F+0** and the separate FM broadcast receiver. This is a general broadcast service. |
-| 108–118 MHz | Aeronautical navigation systems | Not general voice broadcasting; many signals are navigation aids, not audio programmes. Do not treat a tuneable frequency as permission to intercept messages. |
-| 118–137 MHz | Aeronautical communications (AM) | The radio can tune and select AM. These communications are directed to aircraft/air stations; observe the legal restrictions on unauthorised interception and disclosure. |
-| 137–174 MHz | VHF services, including amateur 2 m (144–146 MHz) and other non-public services | Amateur-radio voice is a practical hobby-reception target. Other operational services are not automatically general reception. Some satellite signals are data and cannot be decoded by this radio. |
+| 108–118 MHz | Aeronautical navigation systems | Primarily navigation aids rather than analogue voice channels. |
+| 118–137 MHz | Civil aeronautical communications (AM) | Set `Demodu` to AM. Use the VFO `Step` at **8.33 kHz** for the modern civil channel plan; this changes tuning increments, not the radio's fixed filter bandwidth. |
+| 137–174 MHz | VHF services, including amateur 2 m (144–146 MHz), maritime VHF and satellite signals | The radio can receive analogue FM/AM where its demodulator and bandwidth are suitable. It cannot decode digital satellite telemetry or images. Historic NOAA APT carriers were 137.100 MHz (NOAA-19), 137.620 MHz (NOAA-15) and 137.9125 MHz (NOAA-18); all three spacecraft and the POES constellation were decommissioned in 2025, so these are **legacy reference frequencies**, not current NOAA APT targets. |
+| 156.000–162.025 MHz | Maritime VHF channels, including Channel 16 at **156.800 MHz** | Marine VHF uses 25 kHz channel spacing and FM voice. The UV-K5 is not a type-approved marine safety radio and is not a substitute for ship-station equipment. |
 | 174–240 MHz | DAB digital radio (Band III) and other allocations | The UV-K5 cannot decode DAB. A signal may appear as a broad feature in the spectrum display, but there will be no programme audio. |
 | 240–350 MHz | Various aeronautical, military, satellite and other allocations | Technically within the firmware range; much activity is non-public, digital or specialised. Not a general-purpose decoder. |
-| 350–400 MHz | Specialist and operational allocations | Tunable, but use only for lawful general reception or communications intended for you. |
+| 350–400 MHz | Specialist and operational allocations | Tunable; reception quality varies with frequency and local RF conditions. |
 | 400–430 MHz | UHF services, SRD and other shared/operational allocations | Some analogue signals may be demodulated; much activity is data or private communications. |
-| 430–440 MHz | UK amateur 70 cm allocation; sub-band status/conditions vary (including a London-area restriction on amateur use of 431–432 MHz) | One of the most useful UHF amateur-reception areas. FM voice repeaters/simplex may be heard where reception and the legal position permit. |
+| 430–440 MHz | UK amateur 70 cm allocation; sub-band status/conditions vary (including a London-area restriction on amateur use of 431–432 MHz) | Includes FM simplex/calling and repeater output segments. The radio can receive analogue FM; digital-voice repeaters are not decoded. |
 | 433.05–434.79 MHz (within 400–470 MHz) | Short-range devices and telemetry in the 433 MHz ISM/SRD area | Many devices send short digital/data bursts. The radio may show activity but cannot decode many payloads. |
 | 440–446 MHz | Other UHF allocations and systems | Technically tunable; not all traffic is public/general reception. |
-| 446.0–446.2 MHz | PMR446 analogue and digital handheld radio | The analogue 16-channel plan is listed in section 10. The default firmware can receive analogue FM. It cannot decode dPMR digital voice. Only listen to your own/authorised communications; do not use this radio to transmit on PMR446. |
-| 446.2–470 MHz | Other UHF business and specialist allocations | The receiver can tune them, but many transmissions are private or use digital formats. Do not eavesdrop on non-public communications. |
+| 446.0–446.2 MHz | PMR446 analogue and digital handheld radio | The analogue 16-channel plan is listed in section 10. The default firmware receives analogue FM but cannot decode dPMR digital voice. |
+| 446.2–470 MHz | Other UHF business and specialist allocations | The receiver can tune this range, but many systems are digital and cannot be decoded by the default firmware. |
 | 470–694 MHz | UK digital terrestrial television (Freeview) and other allocations | The radio may tune part of this span, but it cannot decode DVB-T/T2 television. Strong TV multiplexes can appear on the spectrum screen as broad RF activity. |
 | 630–840 MHz | Mobile/broadcast-related allocations across parts of the range | **Not receivable by the BK4819 tuning ranges used by this firmware**; the source rejects 630–840 MHz. |
 | 840–870 MHz | Short-range devices, mobile and other services | Technically within the upper receiver range. Most signals are data or private traffic; not decoded as voice by default. |
@@ -932,14 +966,30 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 
 For a beginner in the UK, sensible starting points are:
 
-Examples in the RSGB 2026 band plan include **51.510 MHz** (6 m FM calling), **145.500 MHz** (2 m FM calling) and **433.500 MHz** (70 cm FM calling). The plan also identifies **145.800 MHz** as the ISS space-to-Earth segment. Treat these as band-plan reference points, not a promise that a signal will be present or that every mode is permitted there. Check the current RSGB band plan and your licence terms before transmitting.
+Useful UK amateur reference points from the RSGB plan include **51.510 MHz** (6 m FM calling), **70.260 MHz** (4 m AM/FM calling), **70.450 MHz** (commonly used 4 m FM calling), **145.500 MHz** (2 m FM calling) and **433.500 MHz** (70 cm FM calling). These are operating-plan markers; use the current RSGB plan for mode and segment detail.
 
+### Common UK amateur repeater shifts (receive output → transmit input)
+
+| Band / system | Repeater output to receive | Radio TX offset to input | Notes |
+|---|---:|---:|---|
+| 2 m | 145.6000–145.7875 MHz | **−0.600 MHz** | RV48–RV63 main output channels; low-power outputs also exist at 145.5750 and 145.5875 MHz. |
+| 70 cm, 1.6 MHz system | 432.994–433.381 MHz | **+1.600 MHz** | RU240–RU270 outputs; inputs are 434.594–434.981 MHz. |
+| 70 cm, 7.6 MHz system | 430.825–430.975 MHz | **+7.600 MHz** | RU66–RU78 outputs; inputs are in 438.425–438.575 MHz. |
+
+The sign shown is from the handheld's point of view when it receives the repeater output and transmits to its input. Local repeater details and coordinated channels can change; confirm a specific repeater's pair before programming it.
+
+### Other useful reference frequencies
+
+- **Civil airband:** 118–137 MHz AM; set the VFO step to 8.33 kHz for 8.33-channel tuning.
+- **Maritime VHF:** Channel 16 is 156.800 MHz (25 kHz channel plan; FM). It is a distress/safety/calling channel, not a general-purpose test frequency.
+- **ISS amateur cross-band repeater:** ARISS lists **437.800 MHz downlink** and **145.990 MHz uplink with 67 Hz tone** for the Columbus station. This is a receive reference, not a guarantee that the radio is active at any particular moment.
+- **UK CB:** CEPT channels occupy 26.965–27.405 MHz; the separate UK 40-channel band occupies 27.60125–27.99125 MHz.
+- **Historic NOAA APT:** 137.100, 137.620 and 137.9125 MHz are the retired NOAA-19, NOAA-15 and NOAA-18 APT frequencies; the NOAA POES constellation was decommissioned in August 2025.
 
 - **FM broadcast:** F+0, tune local stations.
-- **Amateur VHF/UHF:** learn about the 2 m (144–146 MHz) and 70 cm (430–440 MHz) bands, then look for local amateur activity using published amateur-band resources. Reception is not the same as being licensed to transmit.
-- **Amateur 6 m and 4 m:** investigate only after checking the current UK band plan and the radio's practical performance on the particular frequency.
-- **Your own PMR446 radios:** use the analogue channel table in section 10 and set the radio up as a receive-only monitor for your own group.
-- **Spectrum observation:** use F+5 to see whether a signal is present before choosing the correct analogue demodulation mode.
+- **Amateur VHF/UHF:** the 2 m (144–146 MHz) and 70 cm (430–440 MHz) bands are useful starting points; FM and digital voice both exist in parts of these bands.
+- **Amateur 6 m and 4 m:** reception depends on antenna, location, propagation and the signal mode.
+- **Spectrum observation:** use F+5 to see whether RF energy is present before selecting an analogue demodulation mode.
 
 ## 13.2 What this radio does not decode
 
@@ -982,7 +1032,7 @@ This is a conservative baseline for learning the firmware and using the UV-K5 as
 ## 14.2 A sensible PMR446 receive profile
 
 - VFO mode, 400 MHz band group.
-- Frequency: one of the analogue 16 PMR446 channel centres.
+- Frequency: one of the 16 analogue PMR446 channel centres listed in section 10.1.
 - Step: 12.5 kHz.
 - Demodulation: FM.
 - Bandwidth: Narrow.
@@ -1000,7 +1050,7 @@ Do not scan every saved channel if you only care about a few. Put the channels y
 
 A sensible setup sequence after flashing is:
 
-1. **Choose the transmit policy first.** For a receiver-only radio, enter the hidden menu and set `F Lock` to **DISABLE ALL**. Do not choose `GB HAM` just because you are in the UK: that profile allows 144–148 MHz, wider than the UK 2 m amateur allocation.
+1. **Choose the transmit policy first.** For a receiver-only radio, enter the hidden menu and set `F Lock` to **DISABLE ALL** (see section 8.2).
 2. **Set ordinary receive behaviour.** Use `RxMode` = MAIN ONLY, `Sql` = 1 as a starting point, and turn `RxCTCS` and `RxDCS` OFF unless you specifically need selective squelch for a system you are authorised to monitor.
 3. **Set channel defaults to suit the service.** Use FM and Narrow for 12.5 kHz analogue PMR446 channels. Select AM for AM services and USB only for upper-sideband signals. Turn `AM Fix` ON for AM listening in this build.
 4. **Choose a useful battery display.** Set `BatTxt` to VOLTAGE or PERCENT and select `BatTyp` for the battery actually fitted. Adjust `BatCal` only after comparing the displayed voltage with a reliable multimeter at the battery terminals.
@@ -1084,7 +1134,7 @@ The user-facing behaviour described here was traced primarily through these repo
 | `app/chFrScanner.c` | Channel/frequency scan and scan-resume behaviour |
 | `app/scanner.c` / `ui/scanner.c` | Frequency search, CTCSS/DCS detection and scanner save process |
 | `app/fm.c` / `ui/fmradio.c` | FM broadcast radio operations and controls |
-| `helper/boot.c` | PTT + Side1 hidden-menu boot shortcut |
+| `helper/boot.c` | Egzumer application startup shortcuts: PTT + Side1 for F Lock, and PTT + Side2 for AirCopy when compiled |
 | `ui/main.c` / `ui/status.c` | Main screen labels, status icons and channel display modes |
 
 Repository: <https://github.com/egzumer/uv-k5-firmware-custom>
@@ -1116,9 +1166,19 @@ The upstream project Wiki is also linked from the README: <https://github.com/eg
 5. **Ofcom — Amateur radio licence terms and conditions.** Lists the UK amateur frequency bands and their primary/secondary status and conditions, including 50–52 MHz, 70.0–70.5 MHz, 144–146 MHz and 430–440 MHz.  
    <https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf>
 6. **Analogue PMR446 channel plan.** The frequency list in section 10 is the standard 16-channel 12.5 kHz analogue plan within 446.0–446.2 MHz. The Ofcom guidance is the authority for UK use conditions; consult your radio manufacturer's current channel table for tone/code defaults.
-7. **Radio Society of Great Britain (RSGB) — UK Band Plans, January 2026.** Use this for detailed amateur-band segment uses and calling-channel examples, including 51.510 MHz (6 m FM calling), 145.500 MHz (2 m FM calling), 145.800 MHz (ISS space-to-Earth segment) and 433.500 MHz (70 cm FM calling).
+7. **Radio Society of Great Britain (RSGB) — UK Band Plans, January 2026.** Use the online master for current segment and channel information. This manual links directly to the 70 MHz, 144 MHz and 432 MHz band pages for the examples in section 13.1.
    <https://rsgb.org/main/operating/band-plans/>
-   <https://www.rsgb.services/public/bandplans/docs/2026_bandplan_radcom_version.pdf>
+   <https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/>
+   <https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/>
+   <https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/>
+8. **Ofcom — Citizens' Band (CB) radio spectrum use.** Official UK and CEPT channel tables and equipment requirements.
+   <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf>
+9. **Ofcom — UK Interface Requirement 2026.** Technical requirements for maritime mobile radio, including the 156–163 MHz range and 25 kHz channel spacing.
+   <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf>
+10. **ARISS — Current Status of ISS Stations.** Current station configuration and the 145.990 MHz / 437.800 MHz cross-band voice repeater pair; status can change.
+   <https://www.ariss.org/current-status-of-iss-stations.html>
+11. **NOAA OSPO — POES spacecraft status archive.** Records the NOAA-15, NOAA-18 and NOAA-19 APT carrier frequencies and confirms the POES constellation's 2025 decommissioning.
+   <https://ospo.noaa.gov/operations/poes/status.html>
 
 ---
 
@@ -1139,7 +1199,7 @@ The upstream project Wiki is also linked from the README: <https://github.com/eg
 | Spectrum: change scan-range movement step | `2` / `8` |
 | Spectrum: change dB scale top | `3` / `9` |
 | Spectrum: change point count | `4` |
-| Spectrum: enter centre frequency | `5`, digits, `*` decimal, `MENU` accept |
+| Spectrum: enter frequency | `5`, digits, `*` decimal, `MENU` accept; centre below 2.5 kHz scan step, lower edge at 2.5 kHz and above |
 | Spectrum: change listen demodulation | `0` |
 | Spectrum: change listen bandwidth | `6` |
 | Spectrum: lower/raise listen trigger | `F` / `*` |
@@ -1150,4 +1210,4 @@ The upstream project Wiki is also linked from the README: <https://github.com/eg
 | Block all firmware TX | Hidden `F Lock` → `DISABLE ALL` |
 | PMR446 analogue receive | VFO, FM, Narrow, 12.5 kHz Step, RxCTCS/RxDCS OFF, one of the 16 channel centres |
 
-**The most important distinction:** use the UV-K5 as a receiver only where reception is appropriate and lawful. For PMR446 transmission, use a compliant PMR446 handheld; this programmable UV-K5 is not made PMR446-compliant by entering the right frequency.
+**Transmit legality and equipment compliance are covered in section 1.** The PMR446 receive profile above is not a transmit configuration.
