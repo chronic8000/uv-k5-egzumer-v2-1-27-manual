@@ -31,7 +31,7 @@ During a scan, PTT or MENU stops and keeps the found channel; EXIT stops and ret
 
 | Key | Action |
 |---|---|
-| `1` / `7` | Increase/decrease spectrum measurement interval |
+| `1` / `7` | Wider/finer measurement interval (`1` increases the interval; `7` decreases it) |
 | `2` / `8` | Increase/decrease UP/DOWN movement distance |
 | `3` / `9` | Raise/lower top of plotted dB scale |
 | `4` | Cycle 64 → 128 → 16 → 32 → 64 measurement points |
@@ -100,7 +100,7 @@ For analogue PMR446 reception in the normal radio screen:
 | 2 m repeater outputs | 145.600–145.7875 MHz | Typical handheld TX offset −0.600 MHz |
 | Maritime VHF Ch 16 | 156.800 MHz | FM; distress/safety/calling channel, not for radio checks |
 | 70 cm amateur FM calling | 433.500 MHz | FM |
-| 70 cm repeater outputs | 432.994–433.381 MHz | Typical handheld TX offset +1.600 MHz |
+| 70 cm repeater outputs | 432.994–433.381 MHz | Nominal channel centres 433.000–433.375 MHz; typical TX offset +1.600 MHz |
 | 70 cm repeater outputs | 430.825–430.975 MHz | Typical handheld TX offset +7.600 MHz |
 | ISS cross-band repeater | 437.800 MHz downlink | 145.990 MHz uplink, 67 Hz tone; check current ARISS status |
 | Historic NOAA APT | 137.100 / 137.620 / 137.9125 MHz | NOAA-19/15/18 legacy frequencies; satellites retired in 2025 |
