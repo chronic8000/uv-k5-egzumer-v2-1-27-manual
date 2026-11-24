@@ -1,12 +1,11 @@
 # Quansheng UV-K5 / UV-K6 / UV-5R
+
 ## Egzumer Custom Firmware v2.1.27 — Complete User Manual (UK Edition)
 
 **A source-led operating guide to the keypad, display, menus, scanning, spectrum analyser, PMR446 reception and UK spectrum.**
 
 > **Firmware scope.** This guide is written against the `egzumer/uv-k5-firmware-custom` repository and its documented v2.1.27 firmware family. It follows the repository's checked-in `Makefile` defaults. Different builds, forks, hardware revisions and EEPROM contents can change the menus or behaviour. Check the build options in your own binary before assuming that every optional item below is present.
->
 > **Important terminology.** The feature entered with **F + 5** is called “Spectrum” in the source. It is a swept RSSI spectrum analyser with an automatic listening state and a manually tuned “STILL” state. It is not a conventional FFT display or a scrolling time-history waterfall. This manual uses “spectrum screen” and “waterfall” interchangeably where that is what users commonly call it.
->
 > **Menu numbering.** Where this guide gives a menu number, it refers to the repository default build configuration audited for this manual: spectrum, DTMF calling, AM Fix, VOX and the audio bar enabled; NOAA, voice prompts, alarm, 1750 Hz transmit and crystal-calibration menu disabled. Optional build flags can insert or remove menu items and shift later numbers. The on-radio menu label is the reliable identifier.
 
 ---
@@ -60,11 +59,11 @@ This is why the band guide later in this manual distinguishes **technically tuna
 
 The firmware README is unusually candid about this, and it matters:
 
-- The receiver front end has no proper track-tuned band-pass filtering across the whole tuning range.
-- Strong nearby transmitters can overload the receiver and cause false signals, distorted audio or poor reception.
-- AM is especially vulnerable to overload and distortion. The AM Fix can improve matters, but it cannot overcome the limits of the analogue hardware.
-- The spectrum screen is a quick survey tool, not calibrated test equipment. RSSI and dBm readings are approximate and should not be treated as laboratory measurements.
-- The firmware can tune some frequencies for which the radio has no suitable digital decoder. It does not turn the UV-K5 into a DAB, DMR, TETRA, LTE, DVB-T, ADS-B or satellite-data receiver.
+* The receiver front end has no proper track-tuned band-pass filtering across the whole tuning range.
+* Strong nearby transmitters can overload the receiver and cause false signals, distorted audio or poor reception.
+* AM is especially vulnerable to overload and distortion. The AM Fix can improve matters, but it cannot overcome the limits of the analogue hardware.
+* The spectrum screen is a quick survey tool, not calibrated test equipment. RSSI and dBm readings are approximate and should not be treated as laboratory measurements.
+* The firmware can tune some frequencies for which the radio has no suitable digital decoder. It does not turn the UV-K5 into a DAB, DMR, TETRA, LTE, DVB-T, ADS-B or satellite-data receiver.
 
 A better antenna can improve reception on its intended band, but it can also make front-end overload worse in a strong-signal location. More antenna is not automatically better.
 
@@ -73,7 +72,7 @@ A better antenna can improve reception on its intended band, but it can also mak
 The default build has `ENABLE_WIDE_RX=1`. The frequency tables therefore permit the following broad groups:
 
 | Firmware band | Nominal tuning span | Notes |
-|---|---:|---|
+| --- | --- | --- |
 | 50 MHz band group | 18–108 MHz | Extended by `ENABLE_WIDE_RX`; not a dedicated HF receiver |
 | 108 MHz group | 108–137 MHz | Useful for AM reception in the aviation band, subject to the legal warning above |
 | 137 MHz group | 137–174 MHz | VHF services and amateur allocations |
@@ -91,7 +90,7 @@ The BK4819 receive ranges used by the source are approximately **18–630 MHz** 
 The repository's default `Makefile` enables the following principal user features:
 
 | Feature | Default | What it means to the operator |
-|---|---:|---|
+| --- | --- | --- |
 | UART programming | On | PC configuration/programming interface is compiled in |
 | FM broadcast radio | On | Dedicated broadcast-FM receiver mode is available |
 | NOAA weather channels | Off | The US NOAA channel shortcut is not present in this build |
@@ -125,7 +124,7 @@ There are other build options in the Makefile, including display layout, large f
 ## 3.1 The main keypad
 
 | Key | Normal role |
-|---|---|
+| --- | --- |
 | `0`–`9` | Frequency entry in VFO mode; channel-number entry in memory mode; numeric menu selection |
 | `MENU` | Open the menu; enter a menu item; confirm/save a setting |
 | `UP` / `DOWN` | Step frequency or memory channel; move through menus; change settings |
@@ -143,7 +142,7 @@ Tap `F` once, then press the required number key. The F indicator appears in the
 The default-build F combinations are:
 
 | Combination | Action | Notes |
-|---|---|---|
+| --- | --- | --- |
 | **F + 0** | FM broadcast radio | Enters or leaves the dedicated FM receiver |
 | **F + 1** | Band change in VFO mode | In memory mode, the enabled copy-to-VFO feature can copy the channel settings to frequency mode |
 | **F + 2** | Switch A/B VFO | Changes the selected VFO |
@@ -160,7 +159,7 @@ A long press of `F` toggles the keypad lock. For most numeric keys, a long press
 ### Main keypad: short press, F shortcut and long press
 
 | Control | Short press | F + control | Long press / special hold |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `MENU` | Open menu / accept or save | — | Run the action assigned to `M Long` |
 | `EXIT` | Back out; backspace in numeric entry | — | Clear the active input or cancel the active range/input state where supported |
 | `UP` / `DOWN` | Tune, change channel or menu value | Raise / lower squelch directly | Fast continuous movement while held |
@@ -188,18 +187,18 @@ The side keys have separate short-press and long-press assignments. The long-pre
 
 The function choices available in this build are:
 
-- None
-- Flashlight (compiled in)
-- Power — cycle Low/Mid/High
-- Monitor — open squelch while held/active
-- Scan — start/restart scanning
-- VOX (compiled in)
-- FM Radio (compiled in by default)
-- Keypad lock
-- Switch VFO A/B
-- Switch VFO/MR mode
-- Switch demodulator (FM → AM → USB → FM)
-- Spectrum (compiled in)
+* None
+* Flashlight (compiled in)
+* Power — cycle Low/Mid/High
+* Monitor — open squelch while held/active
+* Scan — start/restart scanning
+* VOX (compiled in)
+* FM Radio (compiled in by default)
+* Keypad lock
+* Switch VFO A/B
+* Switch VFO/MR mode
+* Switch demodulator (FM → AM → USB → FM)
+* Spectrum (compiled in)
 
 Alarm and 1750 Hz may also appear in builds where their corresponding options are enabled. `BLMin temporary off` only appears in builds that enable that custom option.
 
@@ -207,13 +206,13 @@ Configure the assignments in the menu items `F1Shrt`, `F1Long`, `F2Shrt`, `F2Lon
 
 ## 3.4 Main-screen keypad shortcuts worth remembering
 
-- **Short `MENU`:** open the menu.
-- **Long `* SCAN`:** start/stop the channel or frequency scan.
-- **Short `* SCAN`:** enter DTMF string input (in normal VFO/MR operation).
-- **F + `* SCAN`:** start CTCSS/DCS detection on the current channel/frequency.
-- **Long `5`:** in MR mode, shortcut for scan-list assignment; in VFO mode, toggles a bounded scan range between the selected VFO frequency and the other VFO's stored RX frequency (the default build has VOX and scan ranges enabled).
-- **Long `MENU`:** run the action configured in `M Long`.
-- **Long `EXIT`:** clear/cancel an active numeric input box.
+* **Short `MENU`:** open the menu.
+* **Long `* SCAN`:** start/stop the channel or frequency scan.
+* **Short `* SCAN`:** enter DTMF string input (in normal VFO/MR operation).
+* **F + `* SCAN`:** start CTCSS/DCS detection on the current channel/frequency.
+* **Long `5`:** in MR mode, shortcut for scan-list assignment; in VFO mode, toggles a bounded scan range between the selected VFO frequency and the other VFO's stored RX frequency (the default build has VOX and scan ranges enabled).
+* **Long `MENU`:** run the action configured in `M Long`.
+* **Long `EXIT`:** clear/cancel an active numeric input box.
 
 ---
 
@@ -225,22 +224,22 @@ The main screen normally shows two VFO lines. The selected VFO is the one used f
 
 A line can display:
 
-- Frequency, memory-channel number, channel name, or name plus frequency, depending on `ChDisp`.
-- Modulation: `FM`, `AM` or `USB`.
-- Tone/code indicators: `CT`, `DCS` or `DCR` when the corresponding FM receive/transmit code mode is configured.
-- TX power: `L`, `M` or `H`.
-- Offset direction: `+` or `-` when a repeater offset is configured.
-- `R` when frequency reverse is active.
-- Narrow-band indication when the channel is set to Narrow.
-- Scan-list markers when that channel participates in Scan List 1 and/or Scan List 2.
-- RSSI/signal level while receiving, and TX level while transmitting.
+* Frequency, memory-channel number, channel name, or name plus frequency, depending on `ChDisp`.
+* Modulation: `FM`, `AM` or `USB`.
+* Tone/code indicators: `CT`, `DCS` or `DCR` when the corresponding FM receive/transmit code mode is configured.
+* TX power: `L`, `M` or `H`.
+* Offset direction: `+` or `-` when a repeater offset is configured.
+* `R` when frequency reverse is active.
+* Narrow-band indication when the channel is set to Narrow.
+* Scan-list markers when that channel participates in Scan List 1 and/or Scan List 2.
+* RSSI/signal level while receiving, and TX level while transmitting.
 
 The status line can show TX/RX/power-save, scan, FM, Dual Watch/cross-band, VOX, keypad lock, F modifier, battery voltage or percentage, USB charging and battery level. Which symbols appear depends on compiled features and active modes.
 
 ## 4.2 VFO (frequency) mode and MR (memory) mode
 
-- **VFO mode:** the display shows a tunable frequency. Use `UP`/`DOWN` to tune by the configured Step size, or type a frequency with the number keys.
-- **MR mode:** the display shows saved memory channels. Use `UP`/`DOWN` to move between valid channels, or enter a three-digit channel number.
+* **VFO mode:** the display shows a tunable frequency. Use `UP`/`DOWN` to tune by the configured Step size, or type a frequency with the number keys.
+* **MR mode:** the display shows saved memory channels. Use `UP`/`DOWN` to move between valid channels, or enter a three-digit channel number.
 
 Use **F + 3** to switch between VFO and MR. Use **F + 2** to switch between VFO A and VFO B.
 
@@ -259,7 +258,7 @@ For a weak signal, try a lower SQL setting before changing other receive setting
 `RxMode` selects one of four modes:
 
 | Display | Behaviour |
-|---|---|
+| --- | --- |
 | MAIN ONLY | TX and RX use the main VFO only |
 | DUAL RX RESPOND | Watch the two VFOs; when a signal is received, the radio can respond on the active/main side according to the firmware's Dual Watch logic |
 | CROSS BAND | TX on the main VFO and RX on the secondary VFO |
@@ -272,7 +271,7 @@ Dual Watch and cross-band functions are not needed for ordinary single-frequency
 The exact layout depends on the selected display mode and which features were compiled, but these are the principal indicators to recognise:
 
 | Indicator | Meaning |
-|---|---|
+| --- | --- |
 | `F` | The F modifier is armed and waiting for the next key |
 | Padlock | Keypad lock is active; long-press `F` to toggle it |
 | `L` / `M` / `H` | Low / Mid / High transmit-power selection |
@@ -323,16 +322,16 @@ The channel carries more than its frequency: it can retain its name, RX/TX tone 
 
 ## 5.4 Rename or delete a memory channel
 
-- `ChName`: choose a valid channel and edit its name. The editor uses `UP`/`DOWN` to change the character; `MENU` advances/accepts; the number keys can enter digits; `*` and `F` provide additional character operations in the name editor. The displayed name field is up to 10 characters.
-- `ChDele`: choose the channel and confirm the deletion. Treat this as destructive.
+* `ChName`: choose a valid channel and edit its name. The editor uses `UP`/`DOWN` to change the character; `MENU` advances/accepts; the number keys can enter digits; `*` and `F` provide additional character operations in the name editor. The displayed name field is up to 10 characters.
+* `ChDele`: choose the channel and confirm the deletion. Treat this as destructive.
 
 The build option `ENABLE_KEEP_MEM_NAME=1` is on by default, so memory names are intended to survive channel re-saving where the firmware can preserve them.
 
 ## 5.5 Frequency reverse and repeater offsets
 
-- `TxODir`: OFF, `+` or `-`.
-- `TxOffs`: offset amount, entered numerically in MHz.
-- `F + 8`: toggle frequency reverse, temporarily swapping the RX and TX frequency roles.
+* `TxODir`: OFF, `+` or `-`.
+* `TxOffs`: offset amount, entered numerically in MHz.
+* `F + 8`: toggle frequency reverse, temporarily swapping the RX and TX frequency roles.
 
 These are channel configuration tools, commonly used for amateur repeaters. They are not needed for PMR446 listening. Do not configure a transmit offset unless you have a lawful and intended transmit use for that channel.
 
@@ -348,14 +347,14 @@ The analyser sweeps a range around the current VFO frequency. It measures receiv
 
 The principal display elements are:
 
-- **Trace:** relative signal strength measured at each horizontal frequency position.
-- **Peak arrow:** points to the strongest currently tracked peak.
-- **Frequency labels:** show the scan start/end or centre/range step, depending on the scan-step mode.
-- **`Nx`:** number of scan measurements (16, 32, 64 or 128).
-- **Scan step:** the frequency interval between adjacent measurements.
-- **dB scale:** approximate receiver level range. The current default starts at about −130 dBm to −50 dBm.
-- **Horizontal trigger line:** the RSSI threshold that determines whether the analyser should switch from sweeping to listening.
-- **Modulation and listen bandwidth:** shown at the top-right area.
+* **Trace:** relative signal strength measured at each horizontal frequency position.
+* **Peak arrow:** points to the strongest currently tracked peak.
+* **Frequency labels:** show the scan start/end or centre/range step, depending on the scan-step mode.
+* **`Nx`:** number of scan measurements (16, 32, 64 or 128).
+* **Scan step:** the frequency interval between adjacent measurements.
+* **dB scale:** approximate receiver level range. The current default starts at about −130 dBm to −50 dBm.
+* **Horizontal trigger line:** the RSSI threshold that determines whether the analyser should switch from sweeping to listening.
+* **Modulation and listen bandwidth:** shown at the top-right area.
 
 The dBm scale is an estimate derived from RSSI and a band correction value. It is not a calibrated field-strength meter. Results can vary by frequency, antenna, radio sample and RF environment.
 
@@ -364,7 +363,7 @@ The dBm scale is an estimate derived from RSSI and a band correction value. It i
 The source initialises the spectrum settings to:
 
 | Setting | Default | Meaning |
-|---|---:|---|
+| --- | --- | --- |
 | Measurement count | 64 | 64 scan points across the displayed span |
 | Scan step | 25.00 kHz | Spacing between measurements |
 | Total swept span | 1.6 MHz | 64 × 25 kHz |
@@ -381,7 +380,7 @@ When the analyser opens from a VFO frequency, it initialises the sweep so that t
 The following table describes the keys while the analyser is in its normal **SPECTRUM** state. These meanings are different from the same keys on the main radio screen.
 
 | Key | Function in the spectrum screen | What it changes |
-|---|---|---|
+| --- | --- | --- |
 | `1` | Increase scan step | Moves to the next wider frequency interval |
 | `7` | Decrease scan step | Moves to the next narrower frequency interval |
 | `2` | Increase frequency movement step | Increases how far UP/DOWN shifts the scan range |
@@ -418,9 +417,9 @@ The available counts are **16, 32, 64 and 128**. The `4` key cycles through them
 
 For example:
 
-- 64 points × 25 kHz = 1.6 MHz.
-- 128 points × 12.5 kHz = 1.6 MHz.
-- 128 points × 6.25 kHz = 800 kHz.
+* 64 points × 25 kHz = 1.6 MHz.
+* 128 points × 12.5 kHz = 1.6 MHz.
+* 128 points × 6.25 kHz = 800 kHz.
 
 The 128 × 12.5 kHz combination is a useful starting point when viewing the complete 200 kHz PMR446 allocation in more detail.
 
@@ -462,9 +461,9 @@ A weak signal below the trigger may appear in the trace but never open the speak
 
 The analyser validates the frequency against its permitted input range. **Whether the entered value is the centre or the lower/start edge depends on the selected analyser scan step:**
 
-- With scan steps **below 2.5 kHz** (0.01, 0.1, 0.5 or 1.0 kHz), the analyser is in *centre mode*. The entered value is the centre; the displayed sweep begins half a span below it.
-- With scan steps **2.5 kHz and above**, the entered value is the *lower/start edge*. The displayed sweep begins at that frequency and extends upward. This includes the default 25 kHz analyser step and the 12.5 kHz PMR446 recipe in section 10.3.
-- When `ScnRng` is active, the range endpoints define the sweep and the `5` frequency-input shortcut is disabled.
+* With scan steps **below 2.5 kHz** (0.01, 0.1, 0.5 or 1.0 kHz), the analyser is in *centre mode*. The entered value is the centre; the displayed sweep begins half a span below it.
+* With scan steps **2.5 kHz and above**, the entered value is the *lower/start edge*. The displayed sweep begins at that frequency and extends upward. This includes the default 25 kHz analyser step and the 12.5 kHz PMR446 recipe in section 10.3.
+* When `ScnRng` is active, the range endpoints define the sweep and the `5` frequency-input shortcut is disabled.
 
 If no digits have been entered, `EXIT` returns to the previous analyser state. The key `*` is the decimal point in this input screen, not the trigger control.
 
@@ -472,18 +471,18 @@ If no digits have been entered, `EXIT` returns to the previous analyser state. T
 
 Pressing PTT while in SPECTRUM calls `SetState(STILL)` and tunes to the tracked peak. The screen changes to a more detailed listening display with:
 
-- The currently tuned peak frequency.
-- A horizontal RSSI meter.
-- Approximate S-meter and dBm values.
-- The trigger marker.
-- Four on-screen register adjustment boxes: `LNAs`, `LNA`, `PGA` and `IF`.
+* The currently tuned peak frequency.
+* A horizontal RSSI meter.
+* Approximate S-meter and dBm values.
+* The trigger marker.
+* Four on-screen register adjustment boxes: `LNAs`, `LNA`, `PGA` and `IF`.
 
 **The PTT key does not start transmission in the analyser's STILL state.** The source's PTT handler for STILL contains a TODO and the transmit code is commented out. Do not generalise this special behaviour to the normal main screen, where PTT is the transmit control.
 
 ## 6.7 STILL state controls — complete key map
 
 | Key | Function in STILL | What it does |
-|---|---|---|
+| --- | --- | --- |
 | `3` / `9` | Adjust top dB limit | Same display-scale adjustment as SPECTRUM |
 | `UP` / `DOWN` | Fine tune the receiver | If no register box is selected, tunes the displayed frequency |
 | `UP` / `DOWN` with a register box selected | Adjust selected register | Increases/decreases the highlighted front-end/IF register value |
@@ -502,10 +501,10 @@ Pressing PTT while in SPECTRUM calls `SetState(STILL)` and tunes to the tracked 
 
 These are low-level BK4819 receiver controls, not normal user settings:
 
-- **LNAs:** adjusts the grouped low-noise amplifier stages.
-- **LNA:** adjusts an individual LNA field.
-- **PGA:** adjusts the programmable-gain amplifier field.
-- **IF:** adjusts an intermediate-frequency register value.
+* **LNAs:** adjusts the grouped low-noise amplifier stages.
+* **LNA:** adjusts an individual LNA field.
+* **PGA:** adjusts the programmable-gain amplifier field.
+* **IF:** adjusts an intermediate-frequency register value.
 
 Changing the LNA/PGA registers causes the firmware to lock the automatic gain-control setup for the session. These are experimental controls. They can make reception worse, cause distortion or make the displayed signal level misleading. For normal listening, leave them alone. Returning to the sweep and exiting the analyser restores the saved radio registers.
 
@@ -545,13 +544,13 @@ Side1 in SPECTRUM marks the currently tracked peak so it is ignored by subsequen
 
 ## 7.1 Menu navigation
 
-- Press `MENU` from the main screen to open the menu.
-- Use `UP`/`DOWN` to move through menu items.
-- Press `MENU` to enter the selected item.
-- In a setting, use `UP`/`DOWN` to change the value. For many items you can also type the numeric value directly.
-- Press `MENU` again to accept/save the setting.
-- Press `EXIT` to back out without accepting the current edit.
-- Type the menu's displayed index number to jump directly to that item. The numbers printed in the tables below match the default build described at the top of this manual. Optional menu items are compiled conditionally, so a custom build can shift the index; use the displayed menu label if a number does not match.
+* Press `MENU` from the main screen to open the menu.
+* Use `UP`/`DOWN` to move through menu items.
+* Press `MENU` to enter the selected item.
+* In a setting, use `UP`/`DOWN` to change the value. For many items you can also type the numeric value directly.
+* Press `MENU` again to accept/save the setting.
+* Press `EXIT` to back out without accepting the current edit.
+* Type the menu's displayed index number to jump directly to that item. The numbers printed in the tables below match the default build described at the top of this manual. Optional menu items are compiled conditionally, so a custom build can shift the index; use the displayed menu label if a number does not match.
 
 Most menu screens time out after approximately **20 seconds** of inactivity. Battery voltage, battery calibration and (if compiled) frequency calibration screens use a longer timeout of approximately **2 minutes**.
 
@@ -562,7 +561,7 @@ Most menu screens time out after approximately **20 seconds** of inactivity. Bat
 Use this index to locate an item quickly. Optional build flags can change the numbering; the menu label on the radio remains the reliable identifier. `FrCali` is omitted because it is not compiled in by default.
 
 | 01–10 | 11–20 | 21–30 | 31–40 | 41–50 | 51–60 | 61–69 (hidden) |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | 01 `Step` | 11 `BusyCL` | 21 `SList2` | 31 `Mic` | 41 `Roger` | 51 `D Hold` | 61 `F Lock` |
 | 02 `TxPwr` | 12 `Compnd` | 22 `ScnRev` | 32 `MicBar` | 42 `STE` | 52 `D Prel` | 62 `Tx 200` |
 | 03 `RxDCS` | 13 `Demodu` | 23 `F1Shrt` | 33 `ChDisp` | 43 `RP STE` | 53 `D Decd` | 63 `Tx 350` |
@@ -572,12 +571,12 @@ Use this index to locate an item quickly. Optional build flags can change the nu
 | 07 `TxODir` | 17 `ChDele` | 27 `M Long` | 37 `BLMin` | 47 `DWCode` | 57 `VOX` | 67 `BatCal` |
 | 08 `TxOffs` | 18 `ChName` | 28 `KeyLck` | 38 `BLMax` | 48 `PTT ID` | 58 `BatVol` | 68 `BatTyp` |
 | 09 `W/N` | 19 `SList` | 29 `TxTOut` | 39 `BltTRX` | 49 `D ST` | 59 `RxMode` | 69 `Reset` |
-| 10 `Scramb` | 20 `SList1` | 30 `BatSav` | 40 `Beep` | 50 `D Resp` | 60 `Sql` | |
+| 10 `Scramb` | 20 `SList1` | 30 `BatSav` | 40 `Beep` | 50 `D Resp` | 60 `Sql` |  |
 
 ## 7.2 Receive and channel settings
 
 | Menu | Options / range | What it means and how to use it |
-|---|---|---|
+| --- | --- | --- |
 | **60** · `Sql` | 0–9 | Squelch threshold. 0 opens the receiver continuously; higher values require a stronger signal. Start low and increase only enough to silence idle noise. |
 | **02** · `TxPwr` | LOW / MID / HIGH | Selects the transmitter output-power level. |
 | **01** · `Step` | 24 step values, 0.01–500 kHz | VFO frequency increment. Choose a step appropriate to the band/channel plan. |
@@ -636,7 +635,7 @@ The source contains **50 CTCSS tone choices** and **104 DCS code choices**. DCS 
 ## 7.3 Scanning and key behaviour settings
 
 | Menu | Options / range | What it means |
-|---|---|---|
+| --- | --- | --- |
 | **29** · `TxTOut` | 30 seconds, 1–9 minutes, 15 minutes | Transmit timeout timer. Stops an overlong transmission after the selected time. It does not grant permission to transmit. |
 | **30** · `BatSav` | OFF / 1:1 / 1:2 / 1:3 / 1:4 | Battery-save ratio. Higher save ratios reduce receiver duty cycle and can increase the chance of missing the beginning of a short signal. |
 | **28** · `KeyLck` | OFF / AUTO | Automatic keypad lock. When enabled, the firmware locks the keypad after inactivity; `F` long-press toggles lock manually. |
@@ -653,7 +652,7 @@ The source contains **50 CTCSS tone choices** and **104 DCS code choices**. DCS 
 ## 7.4 Audio, backlight and display settings
 
 | Menu | Options / range | What it means |
-|---|---|---|
+| --- | --- | --- |
 | **31** · `Mic` | Five gain levels: approximately +1.5, +4, +8, +12, +15.5 dB | Microphone sensitivity/gain for transmission. It is not speaker volume. |
 | **32** · `MicBar` | OFF / ON | Displays the experimental microphone/audio level bar while transmitting. Compiled in by default. |
 | **36** · `BackLt` | OFF / 5 s / 10 s / 20 s / 1 min / 2 min / 4 min / ON | Backlight timeout. OFF means the backlight does not turn on automatically in the usual way; ON keeps it lit. |
@@ -669,7 +668,7 @@ The source contains **50 CTCSS tone choices** and **104 DCS code choices**. DCS 
 ## 7.5 End-of-transmission and tone settings
 
 | Menu | Options / range | What it means |
-|---|---|---|
+| --- | --- | --- |
 | **41** · `Roger` | OFF / ROGER / MDC | End-of-transmission indication. MDC is a signalling option, not a universal compatibility setting. Leave OFF unless the other system expects it. |
 | **42** · `STE` | OFF / ON | Tail-tone elimination. Helps reduce the squelch tail heard when a CTCSS transmission ends. |
 | **43** · `RP STE` | OFF / 1–10 × 100 ms | Repeater tail-elimination delay, from 100 ms increments up to about 1 second. Primarily relevant to repeater use. |
@@ -679,7 +678,7 @@ The source contains **50 CTCSS tone choices** and **104 DCS code choices**. DCS 
 DTMF is Dual-Tone Multi-Frequency signalling. It is not digital voice, DMR or encryption. Since the default build enables DTMF calling, these entries are present:
 
 | Menu | Meaning |
-|---|---|
+| --- | --- |
 | **45** · `ANI ID` | Displays the radio's own DTMF identification string. In this firmware's front-panel menu handler, ANI ID is display-only; the menu key does not open an editor. |
 | **46** · `UPCode` | Displays the DTMF string used for the configured “up”/start code. This is also display-only from the front-panel menu. |
 | **47** · `DWCode` | Displays the DTMF string used for the configured “down”/end code. This is also display-only from the front-panel menu. |
@@ -718,7 +717,7 @@ This bootloader runs **before** Egzumer's application firmware. It is part of th
 These are checked later by the firmware's own `helper/boot.c` handler, after control has passed from the factory bootloader:
 
 | Power-on hold | Egzumer application action | Build condition |
-|---|---|---|
+| --- | --- | --- |
 | **PTT + Side1** (upper) | Opens the hidden menu / F Lock section | Built into this firmware |
 | **PTT + Side2** (lower) | Enters AirCopy mode | Only when `ENABLE_AIRCOPY=1`; disabled in the default build audited here |
 
@@ -727,7 +726,7 @@ At normal operating time, `PTT + Side2` may have yet another function: a 1750 Hz
 ## 8.2 Hidden menu reference
 
 | Menu | Options | What the source does |
-|---|---|---|
+| --- | --- | --- |
 | **61** · `F Lock` | DEFAULT+; FCC HAM; CE HAM; GB HAM; 137–174 / 400–430; 137–174 / 400–438; DISABLE ALL; UNLOCK ALL | Applies a firmware TX frequency filter. In the source, DEFAULT+ permits 137–174 and 400–470 MHz, with 174–350, 350–400 and 470–600 MHz conditionally opened by their separate toggles. DISABLE ALL blocks TX through the firmware frequency check. UNLOCK ALL is deliberately protected by repeated confirmation. |
 | **62** · `Tx 200` | OFF / ON | Enables/disables the additional 174–350 MHz TX range in the default TX-lock logic (the source's band boundary begins at 174 MHz despite the menu label). |
 | **63** · `Tx 350` | OFF / ON | Enables/disables the additional 350–400 MHz TX range. |
@@ -755,13 +754,13 @@ The firmware has more than one scan operation. They are not interchangeable.
 
 This is the main scan function:
 
-- In **MR mode**, it steps through valid memory channels, respecting the selected scan list.
-- In **VFO mode**, it steps through frequencies using the VFO Step value.
-- Use `SList` to choose List 1, List 2 or ALL.
-- Use `ScAdd1`/`ScAdd2` on individual memory channels to include or exclude them from each list.
-- Press `UP` or `DOWN` while scanning to jump to the next channel/frequency in that direction.
-- Press `EXIT` to stop and return to the original frequency/channel.
-- Press `MENU` while scanning to stop and retain the found channel/frequency where the scan state permits; this is the “remember the last found transmission” behaviour described by the project README.
+* In **MR mode**, it steps through valid memory channels, respecting the selected scan list.
+* In **VFO mode**, it steps through frequencies using the VFO Step value.
+* Use `SList` to choose List 1, List 2 or ALL.
+* Use `ScAdd1`/`ScAdd2` on individual memory channels to include or exclude them from each list.
+* Press `UP` or `DOWN` while scanning to jump to the next channel/frequency in that direction.
+* Press `EXIT` to stop and return to the original frequency/channel.
+* Press `MENU` while scanning to stop and retain the found channel/frequency where the scan state permits; this is the “remember the last found transmission” behaviour described by the project README.
 
 The default build enables faster scanning. It uses a short dwell/pause, so very short transmissions can be missed. If you are trying to catch weak or brief signals, a slower scan method or a smaller custom scan list may be more effective. The build also enables `ENABLE_NO_CODE_SCAN_TIMEOUT`, so the CTCSS/DCS code-detection scan does not automatically stop at the usual 32-second timeout; use `EXIT` to end it.
 
@@ -779,12 +778,12 @@ F+4 opens the dedicated scanner screen and performs a frequency search. The scan
 
 The display shows:
 
-- `FREQ:` — frequency being searched/found.
-- `CTC:` — detected CTCSS tone, when one is found.
-- `DCS:` — detected DCS code, when one is found.
-- `SCAN` — search in progress.
-- `SCAN CMP.` — scan completed/found.
-- `SCAN FAIL.` — no valid result found.
+* `FREQ:` — frequency being searched/found.
+* `CTC:` — detected CTCSS tone, when one is found.
+* `DCS:` — detected DCS code, when one is found.
+* `SCAN` — search in progress.
+* `SCAN CMP.` — scan completed/found.
+* `SCAN FAIL.` — no valid result found.
 
 Press `*` to restart the search. Press `MENU` to enter the save process when a valid result is available. The firmware can round a found frequency to a suitable 2.5 kHz or 6.25 kHz step before saving. Follow the prompts to choose a memory channel and confirm.
 
@@ -797,9 +796,10 @@ You can also open `RxCTCS` or `RxDCS` in the menu and press `*` while inside the
 ## 9.5 Scan-resume modes
 
 `ScnRev` controls what happens when a scan stops on a signal:
-- **TIMEOUT:** pause for a time, then resume.
-- **CARRIER:** remain stopped while the carrier is present; resume after it disappears.
-- **STOP:** remain stopped on the found signal until you intervene.
+
+* **TIMEOUT:** pause for a time, then resume.
+* **CARRIER:** remain stopped while the carrier is present; resume after it disappears.
+* **STOP:** remain stopped on the found signal until you intervene.
 
 Choose STOP when you want to inspect a found signal manually. Choose CARRIER for a conventional “stay while someone talks” scan. TIMEOUT is useful when you want the scan to keep moving even if a signal is present.
 
@@ -812,7 +812,7 @@ Choose STOP when you want to inspect a found signal manually. Choose CARRIER for
 The analogue PMR446 channel plan occupies 446.0–446.2 MHz with 12.5 kHz channel spacing. The channel centres are:
 
 | PMR channel | Frequency (MHz) | PMR channel | Frequency (MHz) |
-|---:|---:|---:|---:|
+| --- | --- | --- | --- |
 | 1 | 446.00625 | 9 | 446.10625 |
 | 2 | 446.01875 | 10 | 446.11875 |
 | 3 | 446.03125 | 11 | 446.13125 |
@@ -881,15 +881,15 @@ The dedicated FM broadcast receiver uses a separate BK1080 receiver chip. In the
 
 ## 11.1 Enter and leave FM radio
 
-- Press **F + 0** to enter FM broadcast mode.
-- Press **F + 0** again or `EXIT` to return to the two-way radio screen.
+* Press **F + 0** to enter FM broadcast mode.
+* Press **F + 0** again or `EXIT` to return to the two-way radio screen.
 
 The FM screen shows the selected FM band, current frequency or memory channel, and scan/save/delete prompts.
 
 ## 11.2 FM radio controls
 
 | Key | Function |
-|---|---|
+| --- | --- |
 | Number keys | Enter a broadcast frequency in VFO mode, or a stored station number in memory mode |
 | `UP` / `DOWN` | Tune to the next/previous frequency step or station |
 | `F + 1` | Cycle the FM broadcast band selection |
@@ -935,7 +935,7 @@ This section is a practical orientation guide, not a replacement for Ofcom's ful
 The UV-K5 can tune only the hardware ranges described in section 1. It can demodulate FM, AM and USB in the default build. Many UK services use digital modulation, encrypted/private systems or data bursts that the radio cannot decode.
 
 | Approximate frequency range | UK activity you may encounter | UV-K5 capability / caution |
-|---|---|---|
+| --- | --- | --- |
 | 18–30 MHz | HF services and various short-range/radio uses | Firmware can tune this with Wide RX, but the UV-K5 is not a proper HF receiver. Expect poor sensitivity/selectivity; no general HF performance guarantee. |
 | 26.965–27.405 MHz and 27.60125–27.99125 MHz | UK Citizens' Band: 40 CEPT channels and the separate 40-channel UK band | Tunable with Wide RX. The firmware is not a substitute for compliant CB equipment; use the correct channel plan and mode for reception. |
 | 30–88 MHz | Land-mobile, specialist and other services; amateur 4 m/6 m activity lies in parts of this wider region | Technically tunable. The UV-K5 does not have a dedicated VHF low-band or 6 m/4 m front end. |
@@ -966,17 +966,17 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 
 ### Where to start listening
 
-- **FM broadcast:** F+0, tune local stations.
-- **Amateur VHF/UHF:** the 2 m (144–146 MHz) and 70 cm (430–440 MHz) bands are useful starting points; FM and digital voice both exist in parts of these bands.
-- **Amateur 6 m and 4 m:** reception depends on antenna, location, propagation and the signal mode.
-- **Spectrum observation:** use F+5 to see whether RF energy is present before selecting an analogue demodulation mode.
+* **FM broadcast:** F+0, tune local stations.
+* **Amateur VHF/UHF:** the 2 m (144–146 MHz) and 70 cm (430–440 MHz) bands are useful starting points; FM and digital voice both exist in parts of these bands.
+* **Amateur 6 m and 4 m:** reception depends on antenna, location, propagation and the signal mode.
+* **Spectrum observation:** use F+5 to see whether RF energy is present before selecting an analogue demodulation mode.
 
 Useful UK amateur reference points include **51.510 MHz** (6 m FM calling), **70.260 MHz** (4 m AM calling, identified by the RSGB plan), **70.450 MHz** (commonly used 4 m FM calling/net reference), **145.500 MHz** (2 m FM calling) and **433.500 MHz** (70 cm FM calling). The RSGB 70 MHz page lists 70.294–70.500 MHz as a 12.5 kHz channelised segment; treat 70.450 MHz as a commonly used operating reference rather than a separately reserved channel. Use the current RSGB plan for mode and segment detail.
 
 ### Common UK amateur repeater shifts (receive output → transmit input)
 
 | Band / system | Repeater output to receive | Radio TX offset to input | Notes |
-|---|---:|---:|---|
+| --- | --- | --- | --- |
 | 2 m | 145.6000–145.7875 MHz | **−0.600 MHz** | RV48–RV63 main output channels; low-power outputs also exist at 145.5750 and 145.5875 MHz. |
 | 70 cm, 1.6 MHz system | 432.994–433.381 MHz | **+1.600 MHz** | RU240–RU270 outputs; nominal channel centres are 433.000–433.375 MHz at 12.5 kHz spacing; inputs are 434.594–434.981 MHz. |
 | 70 cm, 7.6 MHz system | 430.825–430.975 MHz | **+7.600 MHz** | RU66–RU78 outputs; inputs are in 438.425–438.575 MHz. |
@@ -985,26 +985,26 @@ The sign shown is from the handheld's point of view when it receives the repeate
 
 ### Other useful reference frequencies
 
-- **Civil airband:** 118–137 MHz AM; set the VFO step to 8.33 kHz for 8.33-channel tuning.
-- **Maritime VHF:** Channel 16 is 156.800 MHz (25 kHz channel plan; FM). It is a distress/safety/calling channel, not a general-purpose test frequency.
-- **ISS amateur cross-band repeater:** ARISS lists **437.800 MHz downlink** and **145.990 MHz uplink with 67 Hz tone** for the Columbus station. This is a receive reference, not a guarantee that the radio is active at any particular moment.
-- **UK CB:** CEPT channels occupy 26.965–27.405 MHz; the separate UK 40-channel band occupies 27.60125–27.99125 MHz.
-- **Historic NOAA APT:** 137.100, 137.620 and 137.9125 MHz are the retired NOAA-19, NOAA-15 and NOAA-18 APT frequencies; the NOAA POES constellation was decommissioned in August 2025.
+* **Civil airband:** 118–137 MHz AM; set the VFO step to 8.33 kHz for 8.33-channel tuning.
+* **Maritime VHF:** Channel 16 is 156.800 MHz (25 kHz channel plan; FM). It is a distress/safety/calling channel, not a general-purpose test frequency.
+* **ISS amateur cross-band repeater:** ARISS lists **437.800 MHz downlink** and **145.990 MHz uplink with 67 Hz tone** for the Columbus station. This is a receive reference, not a guarantee that the radio is active at any particular moment.
+* **UK CB:** CEPT channels occupy 26.965–27.405 MHz; the separate UK 40-channel band occupies 27.60125–27.99125 MHz.
+* **Historic NOAA APT:** 137.100, 137.620 and 137.9125 MHz are the retired NOAA-19, NOAA-15 and NOAA-18 APT frequencies; the NOAA POES constellation was decommissioned in August 2025.
 
 ## 13.2 What this radio does not decode
 
 The default firmware does not demodulate or decode:
 
-- DAB digital radio;
-- DVB-T/T2 digital television;
-- DMR or dPMR digital voice;
-- TETRA public-safety/business systems;
-- P25 or other digital voice standards;
-- LTE/5G cellular signals;
-- ADS-B aircraft position data;
-- GNSS/GPS navigation data;
-- most FSK/LoRa/telemetry/data packets;
-- encrypted or trunked digital radio systems.
+* DAB digital radio;
+* DVB-T/T2 digital television;
+* DMR or dPMR digital voice;
+* TETRA public-safety/business systems;
+* P25 or other digital voice standards;
+* LTE/5G cellular signals;
+* ADS-B aircraft position data;
+* GNSS/GPS navigation data;
+* most FSK/LoRa/telemetry/data packets;
+* encrypted or trunked digital radio systems.
 
 The waterfall may show energy from these systems, but a trace peak is not the same as a decodable voice transmission.
 
@@ -1017,7 +1017,7 @@ This is a conservative baseline for learning the firmware and using the UV-K5 as
 ## 14.1 Main settings
 
 | Setting | Suggested value | Reason |
-|---|---|---|
+| --- | --- | --- |
 | RxMode | MAIN ONLY | Avoids unnecessary Dual Watch/cross-band behaviour |
 | Sql | 1 initially | Sensitive starting point; adjust for local noise |
 | Demodu | FM for ordinary analogue VHF/UHF voice; AM for AM services; USB for upper-sideband hobby signals | Match the signal's modulation |
@@ -1031,14 +1031,14 @@ This is a conservative baseline for learning the firmware and using the UV-K5 as
 
 ## 14.2 A sensible PMR446 receive profile
 
-- VFO mode, 400 MHz band group.
-- Frequency: one of the 16 analogue PMR446 channel centres listed in section 10.1.
-- Step: 12.5 kHz.
-- Demodulation: FM.
-- Bandwidth: Narrow.
-- RxCTCS and RxDCS: OFF.
-- Squelch: 1, adjusted to suit the noise floor.
-- F Lock: DISABLE ALL.
+* VFO mode, 400 MHz band group.
+* Frequency: one of the 16 analogue PMR446 channel centres listed in section 10.1.
+* Step: 12.5 kHz.
+* Demodulation: FM.
+* Bandwidth: Narrow.
+* RxCTCS and RxDCS: OFF.
+* Squelch: 1, adjusted to suit the noise floor.
+* F Lock: DISABLE ALL.
 
 Save frequently used channels in memory only for communications you are entitled to receive. Give each stored channel a meaningful name.
 
@@ -1068,25 +1068,25 @@ Never edit raw EEPROM offsets just because a guide lists them. Use a programming
 
 ## 14.6 Antenna and reception advice
 
-- Use an antenna designed for the band you are listening to.
-- Keep the antenna vertical for vertically polarised handheld/land-mobile signals unless you know the station uses another polarisation.
-- Test in an open location away from computers, USB hubs, switching power supplies and other local noise sources.
-- If the spectrum screen shows a forest of signals or AM audio becomes distorted in a strong RF area, try moving location or using an appropriate attenuator/filter rather than immediately increasing gain.
-- Do not assume an external high-gain antenna will improve every band. The receiver's wide-open front end can overload.
+* Use an antenna designed for the band you are listening to.
+* Keep the antenna vertical for vertically polarised handheld/land-mobile signals unless you know the station uses another polarisation.
+* Test in an open location away from computers, USB hubs, switching power supplies and other local noise sources.
+* If the spectrum screen shows a forest of signals or AM audio becomes distorted in a strong RF area, try moving location or using an appropriate attenuator/filter rather than immediately increasing gain.
+* Do not assume an external high-gain antenna will improve every band. The receiver's wide-open front end can overload.
 
 ---
 
 # 15. Practical troubleshooting
 
 | Symptom | Likely cause | What to try |
-|---|---|---|
+| --- | --- | --- |
 | Frequency entry is rejected | Frequency outside the firmware band table or in the 630–840 MHz gap | Check the tuning range in section 1.4; choose a frequency supported by the BK4819 ranges |
 | No audio, but the frequency looks right | Wrong modulation, squelch too high, or RX CTCSS/DCS mismatch | Set FM/AM correctly, reduce SQL, set RxCTCS/RxDCS OFF for an initial test |
 | PMR446 signal is visible but silent | Trigger is too high, bandwidth too wide/narrow, or digital PMR446 signal | Lower trigger with F; set FM and 12.5 kHz; remember dPMR is not decoded |
 | Waterfall stops constantly | Trigger below local noise floor or a strong unwanted peak dominates | Raise trigger with `*`; blacklist the peak with Side1; try a quieter location |
 | Waterfall never pauses | Trigger too high or the signal is weak | Lower trigger with `F`; check correct VFO frequency and scan range |
 | Peak is visible but voice is distorted | Wrong demodulation, wrong listen bandwidth or front-end overload | Try FM/AM/USB as appropriate and cycle bandwidth with `6`; move away from strong RF sources |
-| A channel is silent despite a strong signal | Incorrect RxCTCSS/RxDCS | Set both to OFF, then identify any required code only if appropriate |
+| A channel is silent despite a strong signal | Incorrect RxCTCS/RxDCS | Set both to OFF, then identify any required code only if appropriate |
 | Scan misses short signals | Fast-scan build and short dwell time | Use fewer channels, scan a smaller list, or use manual tuning |
 | Memory channel does not appear in scan | Channel is not valid or not included in the selected scan list | Check ScAdd1/ScAdd2 and `SList` |
 | Battery percentage is implausible | Wrong battery type or calibration | Set BatTyp correctly; adjust BatCal only against a reliable voltage meter |
@@ -1120,7 +1120,7 @@ The repository README links to the project's recommended UV Tools flasher. Follo
 The user-facing behaviour described here was traced primarily through these repository files:
 
 | Source file | What it establishes |
-|---|---|
+| --- | --- |
 | `README.md` | Firmware lineage, features, build warning, wide-open receiver limitations and feature overview |
 | `Makefile` | Default compile-time feature switches |
 | `app/main.c` | Main screen keypad functions and F-key combinations |
@@ -1137,56 +1137,56 @@ The user-facing behaviour described here was traced primarily through these repo
 | `helper/boot.c` | Egzumer application startup shortcuts: PTT + Side1 for F Lock, and PTT + Side2 for AirCopy when compiled |
 | `ui/main.c` / `ui/status.c` | Main screen labels, status icons and channel display modes |
 
-Repository: <https://github.com/egzumer/uv-k5-firmware-custom>
+Repository: [https://github.com/egzumer/uv-k5-firmware-custom](https://github.com/egzumer/uv-k5-firmware-custom)
 
-Project README: <https://github.com/egzumer/uv-k5-firmware-custom/blob/main/README.md>
+Project README: [https://github.com/egzumer/uv-k5-firmware-custom/blob/main/README.md](https://github.com/egzumer/uv-k5-firmware-custom/blob/main/README.md)
 
-Spectrum source: <https://github.com/egzumer/uv-k5-firmware-custom/blob/main/app/spectrum.c>
+Spectrum source: [https://github.com/egzumer/uv-k5-firmware-custom/blob/main/app/spectrum.c](https://github.com/egzumer/uv-k5-firmware-custom/blob/main/app/spectrum.c)
 
-Menu definitions: <https://github.com/egzumer/uv-k5-firmware-custom/blob/main/ui/menu.c>
+Menu definitions: [https://github.com/egzumer/uv-k5-firmware-custom/blob/main/ui/menu.c](https://github.com/egzumer/uv-k5-firmware-custom/blob/main/ui/menu.c)
 
-Main keypad handling: <https://github.com/egzumer/uv-k5-firmware-custom/blob/main/app/main.c>
+Main keypad handling: [https://github.com/egzumer/uv-k5-firmware-custom/blob/main/app/main.c](https://github.com/egzumer/uv-k5-firmware-custom/blob/main/app/main.c)
 
-Frequency checks: <https://github.com/egzumer/uv-k5-firmware-custom/blob/main/frequencies.c>
+Frequency checks: [https://github.com/egzumer/uv-k5-firmware-custom/blob/main/frequencies.c](https://github.com/egzumer/uv-k5-firmware-custom/blob/main/frequencies.c)
 
-Default build options: <https://github.com/egzumer/uv-k5-firmware-custom/blob/main/Makefile>
+Default build options: [https://github.com/egzumer/uv-k5-firmware-custom/blob/main/Makefile](https://github.com/egzumer/uv-k5-firmware-custom/blob/main/Makefile)
 
-The upstream project Wiki is also linked from the README: <https://github.com/egzumer/uv-k5-firmware-custom/wiki>
+The upstream project Wiki is also linked from the README: [https://github.com/egzumer/uv-k5-firmware-custom/wiki](https://github.com/egzumer/uv-k5-firmware-custom/wiki)
 
 ## 16.2 UK regulatory references
 
-1. **Ofcom — Business Radio Guidance (published 5 December 2025), section 9 PMR446.** Covers 446.0–446.2 MHz, 500 mW ERP, mobile-only/no base stations, no airborne use, non-interference basis and the equipment conditions for licence exemption.  
-   <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf>
-2. **Ofcom — Rules on using radio equipment.** Explains general radio reception, scanners, unauthorised interception and disclosure.  
-   <https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law>
-3. **Wireless Telegraphy Act 2006, section 48.** Statutory text covering interception and disclosure of messages.  
-   <https://www.legislation.gov.uk/ukpga/2006/36/section/48>
-4. **Ofcom — UK Frequency Allocation Table (UKFAT), 2026 edition.** The full UK allocation reference; Ofcom lists the 2026 table as last updated 3 July 2026.  
-   <https://www.ofcom.org.uk/spectrum/frequencies/uk-fat>
-5. **Ofcom — Amateur radio licence terms and conditions.** Lists the UK amateur frequency bands and their primary/secondary status and conditions, including 50–52 MHz, 70.0–70.5 MHz, 144–146 MHz and 430–440 MHz.  
-   <https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf>
+1. **Ofcom — Business Radio Guidance (published 5 December 2025), section 9 PMR446.** Covers 446.0–446.2 MHz, 500 mW ERP, mobile-only/no base stations, no airborne use, non-interference basis and the equipment conditions for licence exemption.
+[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf)
+2. **Ofcom — Rules on using radio equipment.** Explains general radio reception, scanners, unauthorised interception and disclosure.
+[https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law](https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law)
+3. **Wireless Telegraphy Act 2006, section 48.** Statutory text covering interception and disclosure of messages.
+[https://www.legislation.gov.uk/ukpga/2006/36/section/48](https://www.legislation.gov.uk/ukpga/2006/36/section/48)
+4. **Ofcom — UK Frequency Allocation Table (UKFAT), 2026 edition.** The full UK allocation reference; Ofcom lists the 2026 table as last updated 3 July 2026.
+[https://www.ofcom.org.uk/spectrum/frequencies/uk-fat](https://www.ofcom.org.uk/spectrum/frequencies/uk-fat)
+5. **Ofcom — Amateur radio licence terms and conditions.** Lists the UK amateur frequency bands and their primary/secondary status and conditions, including 50–52 MHz, 70.0–70.5 MHz, 144–146 MHz and 430–440 MHz.
+[https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf](https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf)
 6. **Analogue PMR446 channel plan.** The frequency list in section 10 is the standard 16-channel 12.5 kHz analogue plan within 446.0–446.2 MHz. The Ofcom guidance is the authority for UK use conditions; consult your radio manufacturer's current channel table for tone/code defaults.
 7. **Radio Society of Great Britain (RSGB) — UK Band Plans, January 2026.** Use the online master for current segment and channel information. This manual links directly to the 70 MHz, 144 MHz and 432 MHz band pages for the examples in section 13.1.
-   <https://rsgb.org/main/operating/band-plans/>
-   <https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/>
-   <https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/>
-   <https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/>
+[https://rsgb.org/main/operating/band-plans/](https://rsgb.org/main/operating/band-plans/)
+[https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/)
+[https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/)
+[https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/)
 8. **Ofcom — Citizens' Band (CB) radio spectrum use.** Official UK and CEPT channel tables and equipment requirements.
-   <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf>
+[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf)
 9. **Ofcom — Information for maritime radio licensees.** Ofcom lists the maritime interface requirements, including IR 2026 for VHF radiotelephone equipment for general communications and associated Class D DSC equipment. This is an equipment requirement, not a general maritime channel-allocation table.
-   <https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information>
-   <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf>
+[https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information](https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information)
+[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf)
 10. **ARISS — Current Status of ISS Stations.** Current station configuration and the 145.990 MHz / 437.800 MHz cross-band voice repeater pair; status can change.
-   <https://www.ariss.org/current-status-of-iss-stations.html>
+[https://www.ariss.org/current-status-of-iss-stations.html](https://www.ariss.org/current-status-of-iss-stations.html)
 11. **NOAA OSPO — POES spacecraft status archive.** Records the NOAA-15, NOAA-18 and NOAA-19 APT carrier frequencies and confirms the POES constellation's 2025 decommissioning.
-   <https://ospo.noaa.gov/operations/poes/status.html>
+[https://ospo.noaa.gov/operations/poes/status.html](https://ospo.noaa.gov/operations/poes/status.html)
 
 ---
 
 ## Final quick-reference card
 
 | What you want to do | Keys / menu |
-|---|---|
+| --- | --- |
 | Open menu | `MENU` |
 | Switch VFO A/B | `F + 2` |
 | Switch VFO / memory | `F + 3` |
@@ -1196,7 +1196,7 @@ The upstream project Wiki is also linked from the README: <https://github.com/eg
 | Frequency search | `F + 4` |
 | CTCSS/DCS search on current signal | `F + * SCAN` |
 | Open spectrum analyser | `F + 5` |
-| Spectrum: finer/wider measurement interval | `1` / `7` |
+| Spectrum: wider/finer measurement interval | `1` / `7` |
 | Spectrum: change scan-range movement step | `2` / `8` |
 | Spectrum: change dB scale top | `3` / `9` |
 | Spectrum: change point count | `4` |
