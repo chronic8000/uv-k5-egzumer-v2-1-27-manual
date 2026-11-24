@@ -497,6 +497,7 @@ Pressing PTT while in SPECTRUM calls `SetState(STILL)` and tunes to the tracked 
 | `MENU` | Select register box | Cycles through LNAs → LNA → PGA → IF → LNAs |
 | `EXIT` | Return to spectrum sweep | If a register box is selected, the first EXIT clears the selection; another EXIT returns to SPECTRUM and restarts the sweep |
 | `PTT` | No action | The code currently contains no STILL-state transmit implementation |
+
 ### What the register boxes mean
 
 These are low-level BK4819 receiver controls, not normal user settings:
@@ -796,7 +797,6 @@ You can also open `RxCTCS` or `RxDCS` in the menu and press `*` while inside the
 ## 9.5 Scan-resume modes
 
 `ScnRev` controls what happens when a scan stops on a signal:
-
 - **TIMEOUT:** pause for a time, then resume.
 - **CARRIER:** remain stopped while the carrier is present; resume after it disappears.
 - **STOP:** remain stopped on the found signal until you intervene.
@@ -940,7 +940,7 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 | 26.965–27.405 MHz and 27.60125–27.99125 MHz | UK Citizens' Band: 40 CEPT channels and the separate 40-channel UK band | Tunable with Wide RX. The firmware is not a substitute for compliant CB equipment; use the correct channel plan and mode for reception. |
 | 30–88 MHz | Land-mobile, specialist and other services; amateur 4 m/6 m activity lies in parts of this wider region | Technically tunable. The UV-K5 is not a proper HF receiver and does not have a dedicated 4 m/6 m front end. |
 | 50–52 MHz | UK amateur 6-metre activity: 50–51 MHz is primary and 51–52 MHz is secondary under the Ofcom amateur licence terms | FM/AM/USB receiver modes may be useful depending on the signal and band segment. |
-| 70–70.5 MHz | UK amateur 4-metre activity | The band includes narrowband and 12.5 kHz channelised segments; common activity includes 70.260 MHz AM/FM calling and 70.450 MHz FM calling. |
+| 70–70.5 MHz | UK amateur 4-metre activity | The RSGB plan identifies 70.260 MHz as the 4 m AM calling frequency and 70.294–70.500 MHz as a 12.5 kHz channelised segment. 70.450 MHz is also commonly used in UK amateur practice as an FM calling/net reference, but check current local band-plan guidance. |
 | 87.5–108 MHz | Analogue FM broadcast radio | Best accessed with **F+0** and the separate FM broadcast receiver. This is a general broadcast service. |
 | 108–118 MHz | Aeronautical navigation systems | Primarily navigation aids rather than analogue voice channels. |
 | 118–137 MHz | Civil aeronautical communications (AM) | Set `Demodu` to AM. Use the VFO `Step` at **8.33 kHz** for the modern civil channel plan; this changes tuning increments, not the radio's fixed filter bandwidth. |
@@ -966,7 +966,7 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 
 For a beginner in the UK, sensible starting points are:
 
-Useful UK amateur reference points from the RSGB plan include **51.510 MHz** (6 m FM calling), **70.260 MHz** (4 m AM/FM calling), **70.450 MHz** (commonly used 4 m FM calling), **145.500 MHz** (2 m FM calling) and **433.500 MHz** (70 cm FM calling). These are operating-plan markers; use the current RSGB plan for mode and segment detail.
+Useful UK amateur reference points include **51.510 MHz** (6 m FM calling), **70.260 MHz** (4 m AM calling, identified by the RSGB plan), **70.450 MHz** (commonly used 4 m FM calling/net reference), **145.500 MHz** (2 m FM calling) and **433.500 MHz** (70 cm FM calling). The RSGB 70 MHz page lists 70.294–70.500 MHz as a 12.5 kHz channelised segment; treat 70.450 MHz as a commonly used operating reference rather than a separately reserved channel. Use the current RSGB plan for mode and segment detail.
 
 ### Common UK amateur repeater shifts (receive output → transmit input)
 
@@ -1173,7 +1173,8 @@ The upstream project Wiki is also linked from the README: <https://github.com/eg
    <https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/>
 8. **Ofcom — Citizens' Band (CB) radio spectrum use.** Official UK and CEPT channel tables and equipment requirements.
    <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf>
-9. **Ofcom — UK Interface Requirement 2026.** Technical requirements for maritime mobile radio, including the 156–163 MHz range and 25 kHz channel spacing.
+9. **Ofcom — Information for maritime radio licensees.** Ofcom lists the maritime interface requirements, including IR 2026 for VHF radiotelephone equipment for general communications and associated Class D DSC equipment. This is an equipment requirement, not a general maritime channel-allocation table.
+   <https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information>
    <https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf>
 10. **ARISS — Current Status of ISS Stations.** Current station configuration and the 145.990 MHz / 437.800 MHz cross-band voice repeater pair; status can change.
    <https://www.ariss.org/current-status-of-iss-stations.html>
