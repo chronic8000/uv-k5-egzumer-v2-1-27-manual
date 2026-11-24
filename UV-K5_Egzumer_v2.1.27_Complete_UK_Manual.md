@@ -5,7 +5,9 @@
 **A source-led operating guide to the keypad, display, menus, scanning, spectrum analyser, PMR446 reception and UK spectrum.**
 
 > **Firmware scope.** This guide is written against the `egzumer/uv-k5-firmware-custom` repository and its documented v2.1.27 firmware family. It follows the repository's checked-in `Makefile` defaults. Different builds, forks, hardware revisions and EEPROM contents can change the menus or behaviour. Check the build options in your own binary before assuming that every optional item below is present.
+>
 > **Important terminology.** The feature entered with **F + 5** is called “Spectrum” in the source. It is a swept RSSI spectrum analyser with an automatic listening state and a manually tuned “STILL” state. It is not a conventional FFT display or a scrolling time-history waterfall. This manual uses “spectrum screen” and “waterfall” interchangeably where that is what users commonly call it.
+>
 > **Menu numbering.** Where this guide gives a menu number, it refers to the repository default build configuration audited for this manual: spectrum, DTMF calling, AM Fix, VOX and the audio bar enabled; NOAA, voice prompts, alarm, 1750 Hz transmit and crystal-calibration menu disabled. Optional build flags can insert or remove menu items and shift later numbers. The on-radio menu label is the reliable identifier.
 
 ---
@@ -760,7 +762,7 @@ This is the main scan function:
 * Use `ScAdd1`/`ScAdd2` on individual memory channels to include or exclude them from each list.
 * Press `UP` or `DOWN` while scanning to jump to the next channel/frequency in that direction.
 * Press `EXIT` to stop and return to the original frequency/channel.
-* Press `MENU` while scanning to stop and retain the found channel/frequency where the scan state permits; this is the “remember the last found transmission” behaviour described by the project README.
+* Press `PTT` or `MENU` while scanning to stop and retain the found channel/frequency where the scan state permits; this is the “remember the last found transmission” behaviour described by the project README.
 
 The default build enables faster scanning. It uses a short dwell/pause, so very short transmissions can be missed. If you are trying to catch weak or brief signals, a slower scan method or a smaller custom scan list may be more effective. The build also enables `ENABLE_NO_CODE_SCAN_TIMEOUT`, so the CTCSS/DCS code-detection scan does not automatically stop at the usual 32-second timeout; use `EXIT` to end it.
 
@@ -1153,33 +1155,33 @@ Default build options: [https://github.com/egzumer/uv-k5-firmware-custom/blob/ma
 
 The upstream project Wiki is also linked from the README: [https://github.com/egzumer/uv-k5-firmware-custom/wiki](https://github.com/egzumer/uv-k5-firmware-custom/wiki)
 
-## 16.2 UK regulatory references
+## 16.2 UK regulatory references  
 
-1. **Ofcom — Business Radio Guidance (published 5 December 2025), section 9 PMR446.** Covers 446.0–446.2 MHz, 500 mW ERP, mobile-only/no base stations, no airborne use, non-interference basis and the equipment conditions for licence exemption.
-[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf)
-2. **Ofcom — Rules on using radio equipment.** Explains general radio reception, scanners, unauthorised interception and disclosure.
-[https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law](https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law)
-3. **Wireless Telegraphy Act 2006, section 48.** Statutory text covering interception and disclosure of messages.
-[https://www.legislation.gov.uk/ukpga/2006/36/section/48](https://www.legislation.gov.uk/ukpga/2006/36/section/48)
-4. **Ofcom — UK Frequency Allocation Table (UKFAT), 2026 edition.** The full UK allocation reference; Ofcom lists the 2026 table as last updated 3 July 2026.
-[https://www.ofcom.org.uk/spectrum/frequencies/uk-fat](https://www.ofcom.org.uk/spectrum/frequencies/uk-fat)
-5. **Ofcom — Amateur radio licence terms and conditions.** Lists the UK amateur frequency bands and their primary/secondary status and conditions, including 50–52 MHz, 70.0–70.5 MHz, 144–146 MHz and 430–440 MHz.
-[https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf](https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf)
-6. **Analogue PMR446 channel plan.** The frequency list in section 10 is the standard 16-channel 12.5 kHz analogue plan within 446.0–446.2 MHz. The Ofcom guidance is the authority for UK use conditions; consult your radio manufacturer's current channel table for tone/code defaults.
-7. **Radio Society of Great Britain (RSGB) — UK Band Plans, January 2026.** Use the online master for current segment and channel information. This manual links directly to the 70 MHz, 144 MHz and 432 MHz band pages for the examples in section 13.1.
-[https://rsgb.org/main/operating/band-plans/](https://rsgb.org/main/operating/band-plans/)
-[https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/)
-[https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/)
-[https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/)
-8. **Ofcom — Citizens' Band (CB) radio spectrum use.** Official UK and CEPT channel tables and equipment requirements.
-[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf)
-9. **Ofcom — Information for maritime radio licensees.** Ofcom lists the maritime interface requirements, including IR 2026 for VHF radiotelephone equipment for general communications and associated Class D DSC equipment. This is an equipment requirement, not a general maritime channel-allocation table.
-[https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information](https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information)
-[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf)
-10. **ARISS — Current Status of ISS Stations.** Current station configuration and the 145.990 MHz / 437.800 MHz cross-band voice repeater pair; status can change.
-[https://www.ariss.org/current-status-of-iss-stations.html](https://www.ariss.org/current-status-of-iss-stations.html)
-11. **NOAA OSPO — POES spacecraft status archive.** Records the NOAA-15, NOAA-18 and NOAA-19 APT carrier frequencies and confirms the POES constellation's 2025 decommissioning.
-[https://ospo.noaa.gov/operations/poes/status.html](https://ospo.noaa.gov/operations/poes/status.html)
+1. **Ofcom — Business Radio Guidance (published 5 December 2025), section 9 PMR446.** Covers 446.0–446.2 MHz, 500 mW ERP, mobile-only/no base stations, no airborne use, non-interference basis and the equipment conditions for licence exemption.  
+[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/business-radio-licences/business-radio-guidance-document.pdf)  
+2. **Ofcom — Rules on using radio equipment.** Explains general radio reception, scanners, unauthorised interception and disclosure.  
+[https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law](https://www.ofcom.org.uk/spectrum/radio-equipment/radio-spectrum-and-the-law)  
+3. **Wireless Telegraphy Act 2006, section 48.** Statutory text covering interception and disclosure of messages.  
+[https://www.legislation.gov.uk/ukpga/2006/36/section/48](https://www.legislation.gov.uk/ukpga/2006/36/section/48)  
+4. **Ofcom — UK Frequency Allocation Table (UKFAT), 2026 edition.** The full UK allocation reference; Ofcom lists the 2026 table as last updated 3 July 2026.  
+[https://www.ofcom.org.uk/spectrum/frequencies/uk-fat](https://www.ofcom.org.uk/spectrum/frequencies/uk-fat)  
+5. **Ofcom — Amateur radio licence terms and conditions.** Lists the UK amateur frequency bands and their primary/secondary status and conditions, including 50–52 MHz, 70.0–70.5 MHz, 144–146 MHz and 430–440 MHz.  
+[https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf](https://www.ofcom.org.uk/__data/assets/pdf_file/0027/62991/amateur-terms.pdf)  
+6. **Analogue PMR446 channel plan.** The frequency list in section 10 is the standard 16-channel 12.5 kHz analogue plan within 446.0–446.2 MHz. The Ofcom guidance is the authority for UK use conditions; consult your radio manufacturer's current channel table for tone/code defaults.  
+7. **Radio Society of Great Britain (RSGB) — UK Band Plans, January 2026.** Use the online master for current segment and channel information. This manual links directly to the 70 MHz, 144 MHz and 432 MHz band pages for the examples in section 13.1.  
+[https://rsgb.org/main/operating/band-plans/](https://rsgb.org/main/operating/band-plans/)  
+[https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/70mhz-band/)  
+[https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/144mhz-band/)  
+[https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/](https://rsgb.org/main/operating/band-plans/vhf-uhf/432mhz-band/)  
+8. **Ofcom — Citizens' Band (CB) radio spectrum use.** Official UK and CEPT channel tables and equipment requirements.  
+[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/spectrum-enforcement/citizens-band.pdf)  
+9. **Ofcom — Information for maritime radio licensees.** Ofcom lists the maritime interface requirements, including IR 2026 for VHF radiotelephone equipment for general communications and associated Class D DSC equipment. This is an equipment requirement, not a general maritime channel-allocation table.  
+[https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information](https://www.ofcom.org.uk/spectrum/radio-equipment/maritime-information)  
+[https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf](https://www.ofcom.org.uk/siteassets/resources/documents/spectrum/interface-requirements/ir_2026.pdf)  
+10. **ARISS — Current Status of ISS Stations.** Current station configuration and the 145.990 MHz / 437.800 MHz cross-band voice repeater pair; status can change.  
+[https://www.ariss.org/current-status-of-iss-stations.html](https://www.ariss.org/current-status-of-iss-stations.html)  
+11. **NOAA OSPO — POES spacecraft status archive.** Records the NOAA-15, NOAA-18 and NOAA-19 APT carrier frequencies and confirms the POES constellation's 2025 decommissioning.  
+[https://ospo.noaa.gov/operations/poes/status.html](https://ospo.noaa.gov/operations/poes/status.html)  
 
 ---
 
