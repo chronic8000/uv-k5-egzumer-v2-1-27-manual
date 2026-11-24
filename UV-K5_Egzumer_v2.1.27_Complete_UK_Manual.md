@@ -161,7 +161,7 @@ A long press of `F` toggles the keypad lock. For most numeric keys, a long press
 
 | Control | Short press | F + control | Long press / special hold |
 |---|---|---|---|
-| `MENU` | Open menu / accept or save | — | Run the action assigned to `MLong` |
+| `MENU` | Open menu / accept or save | — | Run the action assigned to `M Long` |
 | `EXIT` | Back out; backspace in numeric entry | — | Clear the active input or cancel the active range/input state where supported |
 | `UP` / `DOWN` | Tune, change channel or menu value | Raise / lower squelch directly | Fast continuous movement while held |
 | `1 BAND` | Enter digit 1 | Change VFO band group; in MR mode, copy the current channel to VFO when that feature is enabled | Same band/copy action as F+1 |
@@ -203,7 +203,7 @@ The function choices available in this build are:
 
 Alarm and 1750 Hz may also appear in builds where their corresponding options are enabled. `BLMin temporary off` only appears in builds that enable that custom option.
 
-Configure the assignments in the menu items `F1Shrt`, `F1Long`, `F2Shrt`, `F2Long` and `MLong`.
+Configure the assignments in the menu items `F1Shrt`, `F1Long`, `F2Shrt`, `F2Long` and `M Long`.
 
 ## 3.4 Main-screen keypad shortcuts worth remembering
 
@@ -212,7 +212,7 @@ Configure the assignments in the menu items `F1Shrt`, `F1Long`, `F2Shrt`, `F2Lon
 - **Short `* SCAN`:** enter DTMF string input (in normal VFO/MR operation).
 - **F + `* SCAN`:** start CTCSS/DCS detection on the current channel/frequency.
 - **Long `5`:** in MR mode, shortcut for scan-list assignment; in VFO mode, toggles a bounded scan range between the selected VFO frequency and the other VFO's stored RX frequency (the default build has VOX and scan ranges enabled).
-- **Long `MENU`:** run the action configured in `MLong`.
+- **Long `MENU`:** run the action configured in `M Long`.
 - **Long `EXIT`:** clear/cancel an active numeric input box.
 
 ---
@@ -648,7 +648,7 @@ The source contains **50 CTCSS tone choices** and **104 DCS code choices**. DCS 
 | **24** · `F1Long` | Side-key function list | Assigns the long-press action for Side1. |
 | **25** · `F2Shrt` | Side-key function list | Assigns the short-press action for Side2. |
 | **26** · `F2Long` | Side-key function list | Assigns the long-press action for Side2. |
-| **27** · `MLong` | Side-key function list | Assigns the action for a long press of MENU. |
+| **27** · `M Long` | Side-key function list | Assigns the action for a long press of MENU. |
 
 ## 7.4 Audio, backlight and display settings
 
@@ -938,7 +938,7 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 |---|---|---|
 | 18–30 MHz | HF services and various short-range/radio uses | Firmware can tune this with Wide RX, but the UV-K5 is not a proper HF receiver. Expect poor sensitivity/selectivity; no general HF performance guarantee. |
 | 26.965–27.405 MHz and 27.60125–27.99125 MHz | UK Citizens' Band: 40 CEPT channels and the separate 40-channel UK band | Tunable with Wide RX. The firmware is not a substitute for compliant CB equipment; use the correct channel plan and mode for reception. |
-| 30–88 MHz | Land-mobile, specialist and other services; amateur 4 m/6 m activity lies in parts of this wider region | Technically tunable. The UV-K5 is not a proper HF receiver and does not have a dedicated 4 m/6 m front end. |
+| 30–88 MHz | Land-mobile, specialist and other services; amateur 4 m/6 m activity lies in parts of this wider region | Technically tunable. The UV-K5 does not have a dedicated VHF low-band or 6 m/4 m front end. |
 | 50–52 MHz | UK amateur 6-metre activity: 50–51 MHz is primary and 51–52 MHz is secondary under the Ofcom amateur licence terms | FM/AM/USB receiver modes may be useful depending on the signal and band segment. |
 | 70–70.5 MHz | UK amateur 4-metre activity | The RSGB plan identifies 70.260 MHz as the 4 m AM calling frequency and 70.294–70.500 MHz as a 12.5 kHz channelised segment. 70.450 MHz is also commonly used in UK amateur practice as an FM calling/net reference, but check current local band-plan guidance. |
 | 87.5–108 MHz | Analogue FM broadcast radio | Best accessed with **F+0** and the separate FM broadcast receiver. This is a general broadcast service. |
@@ -964,7 +964,12 @@ The UV-K5 can tune only the hardware ranges described in section 1. It can demod
 
 ## 13.1 Useful hobby-reception targets
 
-For a beginner in the UK, sensible starting points are:
+### Where to start listening
+
+- **FM broadcast:** F+0, tune local stations.
+- **Amateur VHF/UHF:** the 2 m (144–146 MHz) and 70 cm (430–440 MHz) bands are useful starting points; FM and digital voice both exist in parts of these bands.
+- **Amateur 6 m and 4 m:** reception depends on antenna, location, propagation and the signal mode.
+- **Spectrum observation:** use F+5 to see whether RF energy is present before selecting an analogue demodulation mode.
 
 Useful UK amateur reference points include **51.510 MHz** (6 m FM calling), **70.260 MHz** (4 m AM calling, identified by the RSGB plan), **70.450 MHz** (commonly used 4 m FM calling/net reference), **145.500 MHz** (2 m FM calling) and **433.500 MHz** (70 cm FM calling). The RSGB 70 MHz page lists 70.294–70.500 MHz as a 12.5 kHz channelised segment; treat 70.450 MHz as a commonly used operating reference rather than a separately reserved channel. Use the current RSGB plan for mode and segment detail.
 
@@ -973,7 +978,7 @@ Useful UK amateur reference points include **51.510 MHz** (6 m FM calling), **70
 | Band / system | Repeater output to receive | Radio TX offset to input | Notes |
 |---|---:|---:|---|
 | 2 m | 145.6000–145.7875 MHz | **−0.600 MHz** | RV48–RV63 main output channels; low-power outputs also exist at 145.5750 and 145.5875 MHz. |
-| 70 cm, 1.6 MHz system | 432.994–433.381 MHz | **+1.600 MHz** | RU240–RU270 outputs; inputs are 434.594–434.981 MHz. |
+| 70 cm, 1.6 MHz system | 432.994–433.381 MHz | **+1.600 MHz** | RU240–RU270 outputs; nominal channel centres are 433.000–433.375 MHz at 12.5 kHz spacing; inputs are 434.594–434.981 MHz. |
 | 70 cm, 7.6 MHz system | 430.825–430.975 MHz | **+7.600 MHz** | RU66–RU78 outputs; inputs are in 438.425–438.575 MHz. |
 
 The sign shown is from the handheld's point of view when it receives the repeater output and transmits to its input. Local repeater details and coordinated channels can change; confirm a specific repeater's pair before programming it.
@@ -985,11 +990,6 @@ The sign shown is from the handheld's point of view when it receives the repeate
 - **ISS amateur cross-band repeater:** ARISS lists **437.800 MHz downlink** and **145.990 MHz uplink with 67 Hz tone** for the Columbus station. This is a receive reference, not a guarantee that the radio is active at any particular moment.
 - **UK CB:** CEPT channels occupy 26.965–27.405 MHz; the separate UK 40-channel band occupies 27.60125–27.99125 MHz.
 - **Historic NOAA APT:** 137.100, 137.620 and 137.9125 MHz are the retired NOAA-19, NOAA-15 and NOAA-18 APT frequencies; the NOAA POES constellation was decommissioned in August 2025.
-
-- **FM broadcast:** F+0, tune local stations.
-- **Amateur VHF/UHF:** the 2 m (144–146 MHz) and 70 cm (430–440 MHz) bands are useful starting points; FM and digital voice both exist in parts of these bands.
-- **Amateur 6 m and 4 m:** reception depends on antenna, location, propagation and the signal mode.
-- **Spectrum observation:** use F+5 to see whether RF energy is present before selecting an analogue demodulation mode.
 
 ## 13.2 What this radio does not decode
 
