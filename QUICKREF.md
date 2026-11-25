@@ -18,6 +18,7 @@
 | `F + 7` | Toggle VOX |
 | `F + 8` | Reverse RX/TX frequency roles |
 | `F + 9` | Recall configured 1-Call channel |
+| `F + UP` / `F + DOWN` | Increase / decrease squelch level on the fly |
 | Long `F` | Keypad lock/unlock |
 | Short `*` | DTMF input |
 | `F + *` | CTCSS/DCS tone scan |
@@ -45,6 +46,8 @@ During a scan, PTT or MENU stops and keeps the found channel; EXIT stops and ret
 | PTT | Tune to tracked peak and enter STILL (receive; does not TX) |
 | MENU | No action in normal SPECTRUM state |
 | EXIT | Leave Spectrum and restore previous radio state |
+
+**STILL mode:** UP/DOWN fine-tunes; Side1 toggles continuous monitor; MENU selects LNAs/LNA/PGA/IF; EXIT clears the selection or returns to sweep.
 
 ### Frequency-entry rule — important
 
@@ -118,7 +121,7 @@ Use the current [RSGB band plans](https://rsgb.org/main/operating/band-plans/), 
 ## DTMF and hidden-menu reminders
 
 - `ANI ID`, `UPCode` and `DWCode` display values but are read-only in the front-panel menu on this build. Use a compatible PC programming method where supported.
-- The hidden F Lock menu is a firmware filter, not a legal permission certificate. For example, GB HAM allows 144–148 MHz in source code, wider than the UK 2 m allocation of 144–146 MHz.
+- The hidden F Lock menu is a firmware filter, not a legal permission certificate. For example, GB HAM allows 144–148 MHz in source code, wider than the UK 2 m allocation of 144–146 MHz. For receive-only use, set `F Lock` to `DISABLE ALL`.
 - Save/backup configuration before changing calibration or using Reset.
 
 ## Source references
